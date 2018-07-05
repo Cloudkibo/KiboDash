@@ -1,14 +1,4 @@
 import { PlatformAggregate } from './PlatformAggregate'
-import { sequelize } from './../cron/database'
-
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
 
 
 

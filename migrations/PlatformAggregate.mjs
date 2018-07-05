@@ -1,4 +1,5 @@
 import { sequelize } from './../cron/database'
+import  Sequelize  from 'sequelize'
 
 export const PlatformAggregate = sequelize.define('PlatformAggregate', {
   totalConnectedPages: {

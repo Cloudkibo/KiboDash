@@ -5,7 +5,7 @@
   "main": "migrations.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrations": "node migrations.js"
+    "migrations": "node ./migrations/migrations.js"
   },
   "repository": {
     "type": "git",

@@ -1,3 +1,4 @@
-import  Sequelize  from 'sequelize'
+require('dotenv').config()
+import Sequelize from 'sequelize'
 
-export const sequelize = new Sequelize('mysql://root:kibo4321@localhost:3306/kibodash')
+export const sequelize = new Sequelize(process.env.DB_MYSQL)

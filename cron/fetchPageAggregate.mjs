@@ -30,8 +30,6 @@ async function getData(db){
 	let results = await db.collection('pages').aggregate([ joinPageWithSubscribers, selectPageFields]).toArray()
 	data = results
 
-
-
 	console.log("Done fetching page aggregate data")
 	return data
 }

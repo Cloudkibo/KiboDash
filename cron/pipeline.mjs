@@ -9,15 +9,24 @@ export const joinPageWithSubscribers =    {
          as: "pageSubscribers"
        }
   }
-export const selectPageFields =   {
-         $project: {
-            _id: true,
-            pageName: true,
-            pageId: true,
-            pageUserName: true,
-            likes: true,
-            numberOfSubscribers: { $size: "$pageSubscribers" }
-         }
-      }
+export const selectPageFields =     {
+     $project: {
+        _id: true,
+        pageName: true,
+        pageId: true,
+        pageUserName: true,
+        likes: true,
+        numberOfSubscribers: { $size: "$pageSubscribers" },
+        numberOfBroadcasts: {
+                $literal: 0,
+        },
+        numberOfPolls: {
+                $literal: 0
+        },
+        numberOfSurveys: {
+                $literal: 0
+        },
+     }
+  }
 
 

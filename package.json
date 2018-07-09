@@ -5,7 +5,8 @@
   "main": "migrations.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrations": "node --experimental-modules ./migrations/migrations.mjs"
+    "migrations": "node --experimental-modules ./migrations/migrations.mjs",
+    "fetch": "node --experimental-modules ./cron/fetch.mjs"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/Cloudkibo/KiboDash#readme",
   "dependencies": {
     "dotenv": "^6.0.0",
+    "mongodb": "^3.1.1",
     "mongoose": "^5.2.1",
     "mysql2": "^1.5.3",
     "sequelize": "^4.38.0"

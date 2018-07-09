@@ -1,4 +1,18 @@
 import {} from 'dotenv/config'
-import mongoose from 'mongoose'
+import { fetchPlatformAggragateData } from './fetchPlatformAggregate'
+import { fetchPageAggragateData } from './fetchPageAggregate'
 
-mongoose.connect(process.env.DB_MONGO);
+
+
+fetchPlatformAggragateData().then((data) => {
+	console.log(data)
+}).catch((err) => {
+	console.log("ERROR", err)
+})
+
+
+fetchPageAggragateData().then((data) => {
+	console.log(data)
+}).catch((err) => {
+	console.log("ERROR", err)
+})

@@ -9,7 +9,7 @@ export const joinPageWithSubscribers =    {
          as: "pageSubscribers"
        }
   }
-export const selectPageFields =     {
+export const selectPageFields =  {
      $project: {
         _id: true,
         pageName: true,
@@ -29,4 +29,33 @@ export const selectPageFields =     {
      }
   }
 
+export const broadcastPageCount = {
+         $project: {
+            pageCount: { $size: "$segmentationPageIds" }
+         }
+      }
+
+export const filterZeroPageCount = {
+          $match: {
+            pageCount: 0
+          }
+      }
+
+export const selectPageIdAndPageCount = {
+         $project: {
+            segmentationPageIds: true,
+            pageCount: { $size: "$segmentationPageIds" },
+         }
+      }
+
+export const getPageCountGreaterThanZero = {
+      $match: {
+        pageCount: {
+          $gt: 0
+        }
+      }
+    }
+export const expandPageIdArray = { $unwind : "$segmentationPageIds" }
+
+export const countByPageId = { $group : { _id : "$segmentationPageIds",  count : { $sum : 1 } } }
 

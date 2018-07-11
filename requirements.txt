@@ -3,5 +3,5 @@ dash-renderer
 dash-html-components
 dash-core-components==0.24.0rc2
 plotly
-mysql-connector-python
+pymysql
 sshtunnel

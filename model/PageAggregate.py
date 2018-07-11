@@ -1,4 +1,4 @@
-import mysql.connector
+import pymysql
 from random import randint
 import database
 import json
@@ -10,7 +10,7 @@ def drop_table(cursor):
     try:
         cursor.execute(drop_table)
         print('Dropping table {}: '.format(database_name), end='')
-    except mysql.connector.Error as err:
+    except Exception as err:
         print(err.msg)
     else:
         print("OK")
@@ -29,11 +29,8 @@ def create_table(cursor):
     try:
         print("Creating table {}: ".format(database_name), end='')
         cursor.execute(create_table)
-    except mysql.connector.Error as err:
-        if err.errno == mysql.connector.errorcode.ER_TABLE_EXISTS_ERROR:
-            print("already exists.")
-        else:
-            print(err.msg)
+    except Exception as err:
+        print(err.msg)
     else:
         print("OK")
 

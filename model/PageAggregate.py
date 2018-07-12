@@ -34,7 +34,7 @@ def create_table(cursor):
     else:
         print("OK")
 
-def add_random_records(cursor, num_of_records=10):
+def add_random_records(cursor, num_of_records=50):
     add_page_aggregate = ("INSERT INTO {} "
             "(pageName, totalSubscribers, totalBroadcasts, totalPolls, totalSurveys) "
             "VALUES (%s, %s, %s, %s, %s)".format(database_name))
@@ -66,20 +66,11 @@ def get_data():
     cursor = cnx.cursor()
     select_all = ("SELECT * FROM {}".format(database_name))
     cursor.execute(select_all)
-    page_aggregate_data = []
-    for (id, pageName, totalSubscribers, totalBroadcasts, totalPolls, totalSurveys) in cursor:
-        page_data = {
-            'id': id,
-            'pageName': pageName,
-            'totalSubscribers': totalSubscribers,
-            'totalBroadcasts': totalBroadcasts,
-            'totalPolls': totalPolls,
-            'totalSurveys': totalSurveys
-        }
-        page_aggregate_data.append(page_data)
-    
-    print(page_aggregate_data)
-    return page_aggregate_data
+    rows = cursor.fetchall()
+    return {
+        'columns': ['id', 'pageName', 'totalSubscribers', 'totalBroadcasts', 'totalPolls', 'totalSurveys'],
+        'rows': rows
+    }
 
 
 if __name__ == '__main__':

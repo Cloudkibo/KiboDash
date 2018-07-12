@@ -5,23 +5,17 @@ import dash_html_components as html
 import dash_table_experiments as dt
 import json
 import pandas as pd
-import numpy as np
 import plotly
+import sys
+sys.path.insert(0, '../model')
+import PageAggregate as page_aggregate_model
+
 
 app = dash.Dash()
-
 app.css.config.serve_locally = True
 app.scripts.config.serve_locally = True
 
-DF_GAPMINDER = pd.read_csv(
-    'https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv'
-)
-DF_GAPMINDER = DF_GAPMINDER[DF_GAPMINDER['year'] == 2007]
-DF_GAPMINDER.loc[0:20]
-
-print(DF_GAPMINDER.columns)
-print(DF_GAPMINDER.to_dict('records'))
-
+data = page_aggregate_model.get_data()
 
 app.layout = html.Div([
     html.H1('KiboDash', style={
@@ -29,22 +23,22 @@ app.layout = html.Div([
     dcc.Tabs(id="tabs", children=[
         dcc.Tab(label='Page Aggregate Data', children=[
             html.Div([
-                html.H4('Gapminder DataTable'),
+                html.H3('Page Aggregate Data Table', style={'textAlign': 'center'}),
                 dt.DataTable(
-                    rows=DF_GAPMINDER.to_dict('records'),
+                    rows=data['rows'],
 
                     # optional - sets the order of columns
-                    columns=sorted(DF_GAPMINDER.columns),
+                    columns=sorted(data['columns']),
 
                     row_selectable=True,
                     filterable=True,
                     sortable=True,
                     selected_row_indices=[],
-                    id='datatable-gapminder'
+                    id='datatable-page-aggregate'
                 ),
                 html.Div(id='selected-indexes'),
                 dcc.Graph(
-                    id='graph-gapminder'
+                    id='graph-page-aggregate'
                 )
             ], className="container")
         ]),
@@ -75,9 +69,9 @@ app.layout = html.Div([
 ])
 
 @app.callback(
-    Output('datatable-gapminder', 'selected_row_indices'),
-    [Input('graph-gapminder', 'clickData')],
-    [State('datatable-gapminder', 'selected_row_indices')])
+    Output('datatable-page-aggregate', 'selected_row_indices'),
+    [Input('graph-page-aggregate', 'clickData')],
+    [State('datatable-page-aggregate', 'selected_row_indices')])
 def update_selected_row_indices(clickData, selected_row_indices):
     if clickData:
         for point in clickData['points']:
@@ -89,53 +83,51 @@ def update_selected_row_indices(clickData, selected_row_indices):
 
 
 @app.callback(
-    Output('graph-gapminder', 'figure'),
-    [Input('datatable-gapminder', 'rows'),
-     Input('datatable-gapminder', 'selected_row_indices')])
+    Output('graph-page-aggregate', 'figure'),
+    [Input('datatable-page-aggregate', 'rows'),
+     Input('datatable-page-aggregate', 'selected_row_indices')])
 def update_figure(rows, selected_row_indices):
     dff = pd.DataFrame(rows)
     fig = plotly.tools.make_subplots(
-        rows=3, cols=1,
-        subplot_titles=('Life Expectancy', 'GDP Per Capita', 'Population',),
+        rows=4, cols=1,
+        subplot_titles=('Total Subscribers', 'Total Broadcasts', 'Total Polls', 'Total Surveys'),
         shared_xaxes=True)
     marker = {'color': ['#0074D9']*len(dff)}
     for i in (selected_row_indices or []):
         marker['color'][i] = '#FF851B'
     fig.append_trace({
-        'x': dff['country'],
-        'y': dff['lifeExp'],
+        'x': dff['pageName'],
+        'y': dff['totalSubscribers'],
         'type': 'bar',
         'marker': marker
     }, 1, 1)
     fig.append_trace({
-        'x': dff['country'],
-        'y': dff['gdpPercap'],
+        'x': dff['pageName'],
+        'y': dff['totalBroadcasts'],
         'type': 'bar',
         'marker': marker
     }, 2, 1)
     fig.append_trace({
-        'x': dff['country'],
-        'y': dff['pop'],
+        'x': dff['pageName'],
+        'y': dff['totalBroadcasts'],
         'type': 'bar',
         'marker': marker
     }, 3, 1)
+    fig.append_trace({
+        'x': dff['pageName'],
+        'y': dff['totalPolls'],
+        'type': 'bar',
+        'marker': marker
+    }, 4, 1)
     fig['layout']['showlegend'] = False
     fig['layout']['height'] = 800
     fig['layout']['margin'] = {
         'l': 40,
         'r': 10,
         't': 60,
-        'b': 200
+        'b': 50
     }
-    fig['layout']['yaxis3']['type'] = 'log'
     return fig
-
-
-app.css.append_css({
-    'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'
-})
-
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)

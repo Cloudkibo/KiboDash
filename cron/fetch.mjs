@@ -6,7 +6,7 @@ const modelPlatformAggregate = require('./../migrations/PlatformAggregate')
 const modelUserAggregate = require('./../migrations/UserAggregate')
 const modelPageAggregate = require('./../migrations/PageAggregate')
 
-// API base URL
+// App base URL
 const baseURL = 'https://app.kibopush.com/api'
 
 // API endpoints
@@ -14,8 +14,7 @@ const getplatformdata = '/getPlatformData'
 const getcompanydata = '/getCompanyData'
 const getpagedata = '/getPageData'
 
-// Post request body
-// TODO ask about fetching from db
+// Post request body    TODO ask about fetching from db
 let bodyData = {
     start_date: '',     // populate by fetching from db
     end_date: ''        // populate by fetching from db

@@ -61,6 +61,14 @@ def seed_page_aggregate_local():
     cursor.close()
     cnx.close()
 
+def seed_page_aggregate_remote_helper(cursor):
+    drop_table(cursor)
+    create_table(cursor)
+    add_random_records(cursor)
+
+def seed_page_aggregate_remote():
+    run_remote_query(seed_page_aggregate_remote_helper)
+
 def get_data_local():
     cnx = database.get_local_connector()
     cursor = cnx.cursor()
@@ -72,7 +80,21 @@ def get_data_local():
         'rows': rows
     }
 
+def select_all_query(cursor):
+    select_all = ("SELECT * FROM {}".format(database_name))
+    cursor.execute(select_all)
+    rows = cursor.fetchall()
+    return rows
+
+def get_data_remote():
+    rows = database.run_remote_query(select_all_query)
+    return {
+        'columns': ['id', 'pageName', 'totalSubscribers', 'totalBroadcasts', 'totalPolls', 'totalSurveys'],
+        'rows': rows
+    }
+
 
 if __name__ == '__main__':
-    seed_page_aggregate_local()
-    get_data()
+    # seed_page_aggregate_local()
+    # get_data()
+    print(get_data_remote())

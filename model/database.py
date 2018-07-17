@@ -21,6 +21,7 @@ def get_local_connector():
                             cursorclass=pymysql.cursors.DictCursor)
     return connection
 
+
 def run_remote_query(query):
     with open(config_file) as config:
         config = json.load(config)['mysql']['remote']
@@ -42,10 +43,11 @@ def run_remote_query(query):
             cursorclass=pymysql.cursors.DictCursor
         )
         cursor = connection.cursor()
-        query(cursor)
+        result = query(cursor)
         connection.commit()
         cursor.close()
         connection.close()
+        return result
         
 
 

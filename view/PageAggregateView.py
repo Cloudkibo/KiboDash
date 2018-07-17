@@ -15,7 +15,7 @@ app = dash.Dash()
 app.css.config.serve_locally = True
 app.scripts.config.serve_locally = True
 
-data = page_aggregate_model.get_data()
+data = page_aggregate_model.get_data_local()
 
 app.layout = html.Div([
     html.H1('KiboDash', style={
@@ -26,10 +26,6 @@ app.layout = html.Div([
                 html.H3('Page Aggregate Data Table', style={'textAlign': 'center'}),
                 dt.DataTable(
                     rows=data['rows'],
-
-                    # optional - sets the order of columns
-                    columns=sorted(data['columns']),
-
                     row_selectable=True,
                     filterable=True,
                     sortable=True,
@@ -73,6 +69,7 @@ app.layout = html.Div([
     [Input('graph-page-aggregate', 'clickData')],
     [State('datatable-page-aggregate', 'selected_row_indices')])
 def update_selected_row_indices(clickData, selected_row_indices):
+    print('click')
     if clickData:
         for point in clickData['points']:
             if point['pointNumber'] in selected_row_indices:
@@ -87,6 +84,7 @@ def update_selected_row_indices(clickData, selected_row_indices):
     [Input('datatable-page-aggregate', 'rows'),
      Input('datatable-page-aggregate', 'selected_row_indices')])
 def update_figure(rows, selected_row_indices):
+    print('figure updating')
     dff = pd.DataFrame(rows)
     fig = plotly.tools.make_subplots(
         rows=4, cols=1,
@@ -109,13 +107,13 @@ def update_figure(rows, selected_row_indices):
     }, 2, 1)
     fig.append_trace({
         'x': dff['pageName'],
-        'y': dff['totalBroadcasts'],
+        'y': dff['totalPolls'],
         'type': 'bar',
         'marker': marker
     }, 3, 1)
     fig.append_trace({
         'x': dff['pageName'],
-        'y': dff['totalPolls'],
+        'y': dff['totalSurveys'],
         'type': 'bar',
         'marker': marker
     }, 4, 1)

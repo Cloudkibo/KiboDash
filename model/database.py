@@ -1,9 +1,17 @@
 import json
 import sshtunnel
 import pymysql
+import os.path
+
+config_file = ''
+if os.path.isfile('./.env/config.json'):
+    config_file = './.env/config.json'
+else:
+    config_file = '../.env/config.json'
+
 
 def get_local_connector():
-    with open('../.env/config.json') as config:
+    with open(config_file) as config:
         config = json.load(config)['mysql']['local']
     connection = pymysql.connect(host=config['host'],
                             user=config['user'],
@@ -13,8 +21,8 @@ def get_local_connector():
                             cursorclass=pymysql.cursors.DictCursor)
     return connection
 
-def get_remote_connector():
-    with open('../.env/config.json') as config:
+def run_remote_query(query):
+    with open(config_file) as config:
         config = json.load(config)['mysql']['remote']
 
     with sshtunnel.SSHTunnelForwarder(
@@ -33,14 +41,13 @@ def get_remote_connector():
             port=tunnel.local_bind_port,
             cursorclass=pymysql.cursors.DictCursor
         )
-        print(connection)
         cursor = connection.cursor()
-        sql = "SELECT * FROM `PageAggregates`"
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        print(result)
+        query(cursor)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        
 
-    return connection
 
 if __name__ == '__main__':
     #get_local_connector()

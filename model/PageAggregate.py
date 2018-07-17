@@ -51,7 +51,7 @@ def add_random_records(cursor, num_of_records=50):
         print(page_name + ' added')
         cursor.execute(update_page, (page_name, page_id))
 
-def seed_page_aggregate():
+def seed_page_aggregate_local():
     cnx = database.get_local_connector()
     cursor = cnx.cursor()
     drop_table(cursor)
@@ -61,7 +61,7 @@ def seed_page_aggregate():
     cursor.close()
     cnx.close()
 
-def get_data():
+def get_data_local():
     cnx = database.get_local_connector()
     cursor = cnx.cursor()
     select_all = ("SELECT * FROM {}".format(database_name))
@@ -74,5 +74,5 @@ def get_data():
 
 
 if __name__ == '__main__':
-    seed_page_aggregate()
+    seed_page_aggregate_local()
     get_data()

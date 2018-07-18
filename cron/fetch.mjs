@@ -57,15 +57,14 @@ const callbackForPlatform = (error, response, body) => {
 
     // Checking if the truthiness satisfied
     if (body) {
-        // TODO confirm the response body from dayem
         let respData = {
-            totalConnectedPages: body.Connectedpages,
-            totalPages: body.Totalpages,
-            totalUsers: body.Totalusers,
-            totalSubscribers: body.Totalsubscribers,
-            totalBroadcasts: body.Totalbroadcasts,
-            totalPolls: body.Totalpolls,
-            totalSurveys: body.Totalsurveys
+            totalConnectedPages: body.connectedPages,
+            totalPages: body.totalPages,
+            totalUsers: body.totalUsers,
+            totalSubscribers: body.totalSubscribers,
+            totalBroadcasts: body.totalBroadcasts,
+            totalPolls: body.totalPolls,
+            totalSurveys: body.totalSurveys
         }
 
         modelPlatformAggregate.build(respData).save.then(savedData => {})
@@ -82,14 +81,15 @@ const callbackForCompany = (error, response, body) => {
 
     // Checking if the body is truthy
     if (body) {
-        // TODO confirm the response body from dayem
         let respData = {
-            totalConnectedPages: body.Connectedpages,
-            totalPages: body.Totalpages,
-            totalSubscribers: body.Totalsubscribers,
-            totalBroadcasts: body.Totalbroadcasts,
-            totalPolls: body.Totalpolls,
-            totalSurveys: body.Totalsurveys
+            totalConnectedPages: body.connectedPages,
+            totalPages: body.totalPages,
+            totalSubscribers: body.totalSubscribers,
+            totalBroadcasts: body.totalBroadcasts,
+            totalPolls: body.totalPolls,
+            totalSurveys: body.totalSurveys,
+            companyId: body.companyId,
+            companyDomain: body.companyDomain
         }
 
         modelUserAggregate.build(respData).save.then(savedData => {})
@@ -106,12 +106,14 @@ const callbackForPage = (error, response, body) => {
 
     // Checking if the body is truthy
     if (body) {
-        // TODO confirm the response body from dayem
         let respData = {
             totalSubscribers: body.Totalsubscribers,
             totalBroadcasts: body.Totalbroadcasts,
             totalPolls: body.Totalpolls,
-            totalSurveys: body.Totalsurveys
+            totalSurveys: body.Totalsurveys,
+            pageId: body.pageId,
+            pageName: body.pageName,
+            pageLikes: body.pageLikes
         }
 
         modelPageAggregate.build(respData).save.then(savedData => {})

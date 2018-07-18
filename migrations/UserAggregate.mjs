@@ -2,6 +2,11 @@ import { sequelize } from './../cron/database'
 import  Sequelize  from 'sequelize'
 
 export const UserAggregate = sequelize.define('UserAggregate', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   totalConnectedPages: {
     type: Sequelize.INTEGER
   },
@@ -19,5 +24,12 @@ export const UserAggregate = sequelize.define('UserAggregate', {
   },
   totalSurveys: {
     type: Sequelize.INTEGER
+  },
+  companyId: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  companyDomain: {
+    type: Sequelize.STRING
   }
 });

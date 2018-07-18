@@ -2,6 +2,11 @@ import { sequelize } from './../cron/database'
 import  Sequelize  from 'sequelize'
 
 export const PlatformAggregate = sequelize.define('PlatformAggregate', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   totalConnectedPages: {
     type: Sequelize.INTEGER
   },

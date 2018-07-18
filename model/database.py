@@ -52,5 +52,5 @@ def run_remote_query(query):
 
 
 if __name__ == '__main__':
-    #get_local_connector()
-    get_remote_connector()
+    get_local_connector()
+    #get_remote_connector()

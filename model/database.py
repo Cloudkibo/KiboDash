@@ -4,10 +4,10 @@ import pymysql
 import os.path
 
 config_file = ''
-if os.path.isfile('./.env/config.json'):
-    config_file = './.env/config.json'
+if os.path.isfile('./.envpy/config.json'):
+    config_file = './.envpy/config.json'
 else:
-    config_file = '../.env/config.json'
+    config_file = '../.envpy/config.json'
 
 
 def get_local_connector():

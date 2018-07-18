@@ -17,9 +17,9 @@ app = dash.Dash()
 app.css.config.serve_locally = True
 app.scripts.config.serve_locally = True
 
-page_data = page_aggregate_model.get_data_remote()
-user_data = user_aggregate_model.get_data_remote()
-platform_data = plaform_aggregate_model.get_data_remote()
+page_data = page_aggregate_model.get_data_local()
+user_data = user_aggregate_model.get_data_local()
+platform_data = plaform_aggregate_model.get_data_local()
 
 app.layout = html.Div([
     html.H1('KiboDash', style={

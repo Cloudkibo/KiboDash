@@ -71,7 +71,7 @@ def seed_user_aggregate_remote_helper(cursor):
     add_random_records(cursor)
 
 def seed_user_aggregate_remote():
-    run_remote_query(seed_page_aggregate_remote_helper)
+    database.run_remote_query(seed_user_aggregate_remote_helper)
 
 def get_data_local():
     cnx = database.get_local_connector()
@@ -91,6 +91,7 @@ def select_all_query(cursor):
     return rows
 
 def get_data_remote():
+    print('get remote user data')
     rows = database.run_remote_query(select_all_query)
     return {
         'columns': ['id', 'totalConnectedPages', 'totalPages', 'totalSubscribers', 'totalBroadcasts', 'totalPolls', 'totalSurveys'],
@@ -99,5 +100,6 @@ def get_data_remote():
 
 
 if __name__ == '__main__':
-    seed_user_aggregate_local()
-    get_data()
+    # seed_user_aggregate_local()
+    # get_data()
+    seed_user_aggregate_remote()

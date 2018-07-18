@@ -9,7 +9,7 @@ def drop_table(cursor):
     drop_table = ("DROP TABLE {}".format(database_name))
     try:
         cursor.execute(drop_table)
-        print('Dropping table {}: '.format(database_name), end='')
+        print('Dropping table {}: '.format(database_name))
     except Exception as err:
         print(err)
     else:
@@ -28,7 +28,7 @@ def create_table(cursor):
         "  PRIMARY KEY (`id`)"
         ") ENGINE=InnoDB".format(database_name))
     try:
-        print("Creating table {}: ".format(database_name), end='')
+        print("Creating table {}: ".format(database_name))
         cursor.execute(create_table)
     except Exception as err:
         print(err)

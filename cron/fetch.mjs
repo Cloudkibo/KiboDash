@@ -1,10 +1,15 @@
+//Sentry Logs
+
+import Raven from 'raven'
+Raven.config('https://6c7958e0570f455381d6f17122fbd117@sentry.io/292307', { sendTimeout: 5 }).install();
+
 // NPM Imports
-const request = require('request')
+import request from 'request'
 
 // Model Imports
-const modelPlatformAggregate = require('./../migrations/PlatformAggregate')
-const modelUserAggregate = require('./../migrations/UserAggregate')
-const modelPageAggregate = require('./../migrations/PageAggregate')
+import { PlatformAggregate as modelPlatformAggregate }  from './../migrations/PlatformAggregate'
+import { UserAggregate as modelUserAggregate}  from './../migrations/UserAggregate'
+import { PageAggregate as modelPageAggregate}  from './../migrations/PageAggregate'
 
 // App base URL
 const baseURL = 'https://app.kibopush.com/api'
@@ -42,12 +47,6 @@ let optionsPage = {
     uri: baseURL+getpagedata
 }
 
-// Requests to KiboPush server
-request(optionsPlatform, callbackForPlatform(error, response, body))
-request(optionsCompany, callbackForCompany(error, response, body))
-request(optionsPage, callbackForPage(error, response, body))
-
-
 
 // Request Callbacks
 const callbackForPlatform = (error, response, body) => {
@@ -67,7 +66,7 @@ const callbackForPlatform = (error, response, body) => {
             totalSurveys: body.totalSurveys
         }
 
-        modelPlatformAggregate.build(respData).save.then(savedData => {})
+        modelPlatformAggregate.build(respData).save().then(savedData => {})
             .catch(error => {
                 throw error     // TODO Replace it with logic to send to error logger i.e. sentry
             })
@@ -92,7 +91,7 @@ const callbackForCompany = (error, response, body) => {
             companyDomain: body.companyDomain
         }
 
-        modelUserAggregate.build(respData).save.then(savedData => {})
+        modelUserAggregate.build(respData).save().then(savedData => {})
             .catch(error => {
                 throw error     // TODO Replace it with logic to send to error logger i.e. sentry
             })
@@ -116,9 +115,14 @@ const callbackForPage = (error, response, body) => {
             pageLikes: body.pageLikes
         }
 
-        modelPageAggregate.build(respData).save.then(savedData => {})
+        modelPageAggregate.build(respData).save().then(savedData => {})
             .catch(error => {
                 throw error     // TODO Replace it with logic to send to error logger i.e. sentry
             })
     }
 }
+
+// Requests to KiboPush server
+request(optionsPlatform, callbackForPlatform)
+request(optionsCompany, callbackForCompany)
+request(optionsPage, callbackForPage)

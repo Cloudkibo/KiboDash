@@ -1,10 +1,17 @@
 //Sentry Logs
 
 import Raven from 'raven'
+
 Raven.config('https://6c7958e0570f455381d6f17122fbd117@sentry.io/292307', { sendTimeout: 5 }).install();
 
 // NPM Imports
+import https from 'https'
 import request from 'request'
+
+//CronHub
+// ping when your job starts
+https.get("https://cronhub.io/start/486be8e0-8dc6-11e8-b150-13c76fd13c42");
+
 
 // Model Imports
 import { PlatformAggregate as modelPlatformAggregate }  from './../migrations/PlatformAggregate'
@@ -126,3 +133,6 @@ const callbackForPage = (error, response, body) => {
 request(optionsPlatform, callbackForPlatform)
 request(optionsCompany, callbackForCompany)
 request(optionsPage, callbackForPage)
+
+// ping when your job is finished
+https.get("https://cronhub.io/finish/486be8e0-8dc6-11e8-b150-13c76fd13c42");

@@ -3,3 +3,5 @@ node_modules
 .envpy
 __pycache__
 .idea/
+npm-debug.log 
+.vscode/

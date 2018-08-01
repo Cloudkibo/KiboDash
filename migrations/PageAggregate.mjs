@@ -1,5 +1,5 @@
 import { sequelize } from './../cron/database'
-import  Sequelize  from 'sequelize'
+import Sequelize from 'sequelize'
 
 export const PageAggregate = sequelize.define('PageAggregate', {
   id: {

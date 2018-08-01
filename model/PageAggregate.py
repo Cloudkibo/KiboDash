@@ -27,7 +27,7 @@ def create_table(cursor):
         "  PRIMARY KEY (`id`)"
         ") ENGINE=InnoDB".format(database_name))
     try:
-        print("Creating table {}: ".format(database_name), end='')
+        print("Creating table {}: ".format(database_name))
         cursor.execute(create_table)
     except Exception as err:
         print(err.msg)

@@ -9,10 +9,10 @@ export const PageAggregate = sequelize.define('PageAggregate', {
   },
   pageId: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   pageName: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   pageLikes: {
     type: Sequelize.INTEGER
@@ -29,4 +29,4 @@ export const PageAggregate = sequelize.define('PageAggregate', {
   totalSurveys: {
     type: Sequelize.INTEGER
   }
-});
+})

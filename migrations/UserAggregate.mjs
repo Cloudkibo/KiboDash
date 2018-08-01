@@ -29,7 +29,11 @@ export const UserAggregate = sequelize.define('UserAggregate', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  companyDomain: {
+  userId: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  useName: {
     type: Sequelize.STRING
   }
-});
+})

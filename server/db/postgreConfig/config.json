@@ -1,0 +1,31 @@
+{
+  "development": {
+    "username": "asad",
+    "password": "asad",
+    "database": "kibodash",
+    "host": "127.0.0.1",
+    "port": "5432",
+    "dialect": "mysql",
+    "pool": {
+      "max": 30,
+      "min": 0,
+      "idle": 20000,
+      "acquire": 20000
+      }
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "kibo4321",
+    "database": "kibodash",
+    "host": "localhost",
+    "port": "3306",
+    "dialect": "mysql"
+  }
+}

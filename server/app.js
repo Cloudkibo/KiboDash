@@ -9,6 +9,7 @@ const helmet = require('helmet')
 
 const config = require('./config')
 const logger = require('./components/logger')
+const models = require('./db/models')
 const TAG = 'app.js'
 
 const app = express()
@@ -42,13 +43,20 @@ if (env === 'development' || env === 'test') {
 
   app.use(morgan('dev'))
 }
-app.listen(config.port, () => {
-  console.log('started console')
-  logger.serverLog(TAG, `KiboPush server STARTED on ${
-    config.port} in ${config.env} mode`)
-})
 
-console.log('server started')
+/**
+ * sync function will check if the tables exist
+ *    then don't run
+ * else
+ *    run and create the tables
+ */
+models.sequelize.sync().then(() => {
+  // Start the express server
+  app.listen(config.port, () => {
+    logger.serverLog(TAG, `KiboPush server STARTED on ${
+      config.port} in ${config.env} mode`)
+  })
+})
 
 if (config.env === 'production') {
   logger.serverLog('KiboPush server STARTED on %s in %s mode', config.port, config.env)

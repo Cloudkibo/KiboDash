@@ -28,3 +28,16 @@ For Database With Sync and Await
 	- fetchPlatformAggregate.js
 	- fetchUserAggregate.js
 	- fetchPageAggregate.js
+- server
+	- app.js //Main File Starting Point
+	- config.js //Configuration File
+	- routes.js //Define the routes
+	- api
+		- admin
+			- index.js
+			- controller.js
+		- v1
+			- moduleName // Module Wise Folder
+				- index.js
+				- controller.js
+				- model.js

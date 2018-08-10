@@ -50,6 +50,7 @@ if (env === 'development' || env === 'test') {
  * else
  *    run and create the tables
  */
+
 models.sequelize.sync().then(() => {
   // Start the express server
   app.listen(config.port, () => {

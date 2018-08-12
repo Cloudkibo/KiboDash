@@ -8,7 +8,7 @@
     "migrations": "node --experimental-modules ./migrations/migrations.mjs",
     "fetch": "node --experimental-modules ./cron/fetch.mjs",
     "start:cron_script": "sh cronjob_script",
-    "start:local_cron": "node ./cron/fetch.mjs",
+    "start:local_cron": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost node cron/fetch.js",
     "start:prod": "cross-env NODE_ENV=production node server/app.js",
     "debug": "cross-env DEBUG=express:router:route,express:application,kibopush:* NODE_ENV=development nodemon --trace-sync-io server/app.js",
     "lint": "echo 'Pre-commit checks...' && standard --fix && echo \"No code style errors found.\"",

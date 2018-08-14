@@ -7,7 +7,8 @@ const TAG = '/cron/fetch.js'
 const models = require('./../server/db/models')
 
 // App base URL
-const baseURL = 'https://staging.kibopush.com/api'
+// const baseURL = 'https://staging.kibopush.com/api/kibodash'
+const baseURL = 'http://localhost:3000/api/kibodash'
 
 // API endpoints
 const getplatformdata = '/getPlatformData'

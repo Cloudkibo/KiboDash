@@ -8,7 +8,7 @@ const models = require('./../server/db/models')
 
 // App base URL
 // const baseURL = 'https://staging.kibopush.com/api/kibodash'
-const baseURL = 'http://localhost:3000/api/kibodash'
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/kibodash' : 'https://staging.kibopush.com/api/kibodash'
 
 // API endpoints
 const getplatformdata = '/getPlatformData'
@@ -23,61 +23,105 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
   // Request for Platform Aggregate data
   models.PlatformAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
     .then((data) => {
-      let bodyData = {
-        start_date: data[0].dataValues.createdAt
+      // We are making a string because request library only supports strings for formData
+      let startDate = data[0] &&
+                       data[0].dataValues &&
+                       data[0].dataValues.createdAt &&
+                       data[0].dataValues.createdAt
+      if (startDate === undefined) {
+        startDate = ''
       }
+
       let optionsPlatform = {
         method: 'POST',
         json: true,
-        formData: bodyData,
+        formData: startDate,
         uri: baseURL + getplatformdata
       }
       reqForPlatform(optionsPlatform)
+    })
+    .catch((err) => {
+      if (err) {
+        logger.serverLog(TAG, 'Error Platform Date fetching: ' + JSON.stringify(err))
+      }
     })
 
   // Request for Company Aggregate Data
   models.UserAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
     .then((data) => {
-      let bodyData = {
-        start_date: data[0].dataValues.createdAt
+      // We are making a string because request library only supports strings for formData
+      let startDate = data[0] &&
+                       data[0].dataValues &&
+                       data[0].dataValues.createdAt &&
+                       data[0].dataValues.createdAt
+      if (startDate === undefined) {
+        startDate = ''
       }
+
       let optionsCompany = {
         method: 'POST',
         json: true,
-        formData: bodyData,
+        formData: startDate,
         uri: baseURL + getcompanydata
       }
       reqForCompany(optionsCompany)
+    })
+    .catch((err) => {
+      if (err) {
+        logger.serverLog(TAG, 'Error User Date fetching:' + JSON.stringify(err))
+      }
     })
 
   // Request for Page Aggregate Data
   models.PageAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
     .then((data) => {
-      let bodyData = {
-        start_date: data[0].dataValues.createdAt
+      // We are making a string because request library only supports strings for formData
+      let startDate = data[0] &&
+                       data[0].dataValues &&
+                       data[0].dataValues.createdAt &&
+                       data[0].dataValues.createdAt
+      if (startDate === undefined) {
+        startDate = ''
       }
+
       let optionsPage = {
         method: 'POST',
         json: true,
-        formData: bodyData,
+        formData: startDate,
         uri: baseURL + getpagedata
       }
       reqForPage(optionsPage)
+    })
+    .catch((err) => {
+      if (err) {
+        logger.serverLog(TAG, 'Error Page Date fetching:' + JSON.stringify(err))
+      }
     })
 
   // Request for Autoposting Aggregate Data
   models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
     .then((data) => {
-      let bodyData = {
-        start_date: data[0].dataValues.createdAt
+      // We are making a string because request library only supports strings for formData
+      let startDate = data[0] &&
+                       data[0].dataValues &&
+                       data[0].dataValues.createdAt &&
+                       data[0].dataValues.createdAt
+      if (startDate === undefined) {
+        startDate = ''
       }
+
       let optionsAutoposting = {
         method: 'POST',
         json: true,
-        formData: bodyData,
+        formData: startDate,
         uri: baseURL
       }
       reqForAutoposting(optionsAutoposting)
+    })
+    .catch((err) => {
+      if (err) {
+        logger.serverLog(TAG, 'Error Autoposting Date fetching:' + JSON.stringify(err))
+      }
     })
 }())
 
@@ -86,28 +130,27 @@ const reqForPlatform = function (optionsPlatform) {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-
+    console.log(body)
     // Checking if the truthiness satisfied
     if (body) {
-      let respData
-      for (let i = 0, length = body.length; i < length; i++) {
-        respData = {
-          totalConnectedPages: body[i].connectedPages,
-          totalPages: body[i].totalPages,
-          totalUsers: body[i].totalUsers,
-          totalSubscribers: body[i].totalSubscribers,
-          totalBroadcasts: body[i].totalBroadcasts,
-          totalPolls: body[i].totalPolls,
-          totalSurveys: body[i].totalSurveys
-        }
-
-        models.PlatformAggregate.create(respData).then(savedData => {
-          logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
-        })
-          .catch(error => {
-            logger.serverLog(TAG, 'Error while saving platform data to DB: ' + JSON.stringify(error))
-          })
+      let respData = {
+        totalConnectedPages: body.payload.connectedPages,
+        totalPages: body.payload.totalPages,
+        totalUsers: body.payload.totalUsers,
+        totalSubscribers: body.payload.totalSubscribers,
+        totalBroadcasts: body.payload.totalBroadcasts,
+        totalPolls: body.payload.totalPolls,
+        totalSurveys: body.payload.totalSurveys
       }
+
+      console.log(respData)
+
+      models.PlatformAggregate.create(respData).then(savedData => {
+        logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+      })
+        .catch(error => {
+          logger.serverLog(TAG, 'Error while saving platform data to DB: ' + JSON.stringify(error))
+        })
     }
   })
 }
@@ -123,14 +166,14 @@ const reqForCompany = function (optionsCompany) {
       let respData
       for (let i = 0, length = body.length; i < length; i++) {
         respData = {
-          totalConnectedPages: body[i].connectedPages,
-          totalPages: body[i].totalPages,
-          totalSubscribers: body[i].totalSubscribers,
-          totalBroadcasts: body[i].totalBroadcasts,
-          totalPolls: body[i].totalPolls,
-          totalSurveys: body[i].totalSurveys,
-          companyId: body[i].companyId,
-          companyDomain: body[i].companyDomain
+          totalConnectedPages: body.payload[i].connectedPages,
+          totalPages: body.payload[i].totalPages,
+          totalSubscribers: body.payload[i].totalSubscribers,
+          totalBroadcasts: body.payload[i].totalBroadcasts,
+          totalPolls: body.payload[i].totalPolls,
+          totalSurveys: body.payload[i].totalSurveys,
+          companyId: body.payload[i].companyId,
+          companyDomain: body.payload[i].companyDomain
         }
 
         models.UserAggregate.create(respData).then(savedData => {
@@ -155,13 +198,13 @@ const reqForPage = function (optionsPage) {
       let respData
       for (let i = 0, length = body.length; i < length; i++) {
         respData = {
-          totalSubscribers: body[i].Totalsubscribers,
-          totalBroadcasts: body[i].Totalbroadcasts,
-          totalPolls: body[i].Totalpolls,
-          totalSurveys: body[i].Totalsurveys,
-          pageId: body[i].pageId,
-          pageName: body[i].pageName,
-          pageLikes: body[i].pageLikes
+          totalSubscribers: body.payload[i].Totalsubscribers,
+          totalBroadcasts: body.payload[i].Totalbroadcasts,
+          totalPolls: body.payload[i].Totalpolls,
+          totalSurveys: body.payload[i].Totalsurveys,
+          pageId: body.payload[i].pageId,
+          pageName: body.payload[i].pageName,
+          pageLikes: body.payload[i].pageLikes
         }
 
         models.PageAggregate.create(respData).then(savedData => {
@@ -188,13 +231,13 @@ const reqForAutoposting = function (optionsAutoposting) {
         let respData
         for (let i = 0, length = body.length; i < length; i++) {
           respData = {
-            userId: body[i].userId,
-            autopostingId: body[i].autopostingId,
-            type: body[i].type,
-            pageId: body[i].pageId,
-            totalAutopostingSent: body[i].totalAutopostingSent
+            userId: body.payload[i].userId,
+            autopostingId: body.payload[i].autopostingId,
+            type: body.payload[i].type,
+            pageId: body.payload[i].pageId,
+            totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body[i].type)
+          saveToDatabase(respData, body.payload[i].type)
         }
       }
     })
@@ -212,13 +255,13 @@ const reqForAutoposting = function (optionsAutoposting) {
         let respData
         for (let i = 0, length = body.length; i < length; i++) {
           respData = {
-            userId: body[i].userId,
-            autopostingId: body[i].autopostingId,
-            type: body[i].type,
-            twitterId: body[i].twitterId,
-            totalAutopostingSent: body[i].totalAutopostingSent
+            userId: body.payload[i].userId,
+            autopostingId: body.payload[i].autopostingId,
+            type: body.payload[i].type,
+            twitterId: body.payload[i].twitterId,
+            totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body[i].type)
+          saveToDatabase(respData, body.payload[i].type)
         }
       }
     })
@@ -236,13 +279,13 @@ const reqForAutoposting = function (optionsAutoposting) {
         let respData
         for (let i = 0, length = body.length; i < length; i++) {
           respData = {
-            userId: body[i].userId,
-            autopostingId: body[i].autopostingId,
-            type: body[i].type,
-            wordpressId: body[i].wordpressId,
-            totalAutopostingSent: body[i].totalAutopostingSent
+            userId: body.payload[i].userId,
+            autopostingId: body.payload[i].autopostingId,
+            type: body.payload[i].type,
+            wordpressId: body.payload[i].wordpressId,
+            totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body[i].type)
+          saveToDatabase(respData, body.payload[i].type)
         }
       }
     })

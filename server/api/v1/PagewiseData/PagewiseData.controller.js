@@ -14,6 +14,24 @@ exports.index = function (req, res) {
     })
 }
 
+exports.topPages = function (req, res) {
+  logger.serverLog(TAG, 'Hit the All Page Analytics endpoint')
+
+  let parametersMissing = false
+  if (!_.has(req.body, 'limit')) parametersMissing = true
+  if (parametersMissing) {
+    return res.status(400)
+      .json({status: 'failed', description: 'Parameters are missing'})
+  }
+
+  models.TotalPagewiseAnalytics.findAll({order: [['totalSubscribers', 'DESC']], limit: req.body.limit}).then((data) => {
+    res.status(200).json({ status: 'success', payload: data })
+  })
+    .catch((err) => {
+      res.status(500).json({ status: 'failed', payload: err })
+    })
+}
+
 exports.OnePageAnalytics = function (req, res) {
   logger.serverLog(TAG, 'Hit the OnePageAnalytics endpoint')
 

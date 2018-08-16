@@ -182,7 +182,6 @@ const reqForCompany = function (optionsCompany) {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-    console.log(body)
     // Checking if the body is truthy
     if (body) {
       let respData, updatePayload, analyticsPayload

@@ -143,7 +143,7 @@ const reqForPlatform = function (optionsPlatform) {
       }
 
       models.PlatformAggregate.create(respData).then(savedData => {
-        logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+        logger.serverLog(TAG, 'Successfully Saved: Platform Aggregate')
         // Going to update total Platform Analytics table
         models.TotalPlatformwiseAnalytics.find().then(result => {
           if (result) {
@@ -157,7 +157,7 @@ const reqForPlatform = function (optionsPlatform) {
               totalSurveys: result.dataValues.totalSurveys + body.payload.totalSurveys
             }
             result.updateAttributes(updatePayload).then(result2 => {
-              logger.serverLog(TAG, 'Successfully update Total Platformwise Analytics: ' + JSON.stringify(result2))
+              logger.serverLog(TAG, 'Successfully update Total Platformwise Analytics: ')
             })
               .catch(error => {
                 logger.serverLog(TAG, 'Error While update user wise analytics: ' + JSON.stringify(error))
@@ -165,7 +165,7 @@ const reqForPlatform = function (optionsPlatform) {
           } else {
             // It means this is the first entry for platform wise analytics
             models.TotalPlatformwiseAnalytics.create(respData).then(analyticsResult => {
-              logger.serverLog(TAG, 'Successfully saved Total Platformwise Analytics: ' + JSON.stringify(analyticsResult))
+              logger.serverLog(TAG, 'Successfully saved Total Platformwise Analytics: ')
             })
           }
         })
@@ -198,7 +198,7 @@ const reqForCompany = function (optionsCompany) {
         }
 
         models.UserAggregate.create(respData).then(savedData => {
-          logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+          logger.serverLog(TAG, 'Successfully Saved: UserAggregate')
           // Going to update total Platform Analytics table
           models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
             if (result) {
@@ -211,7 +211,7 @@ const reqForCompany = function (optionsCompany) {
                 totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys
               }
               result.updateAttributes(updatePayload).then(result2 => {
-                logger.serverLog(TAG, 'Successfully update Total Userwise Analytics: ' + JSON.stringify(result2))
+                logger.serverLog(TAG, 'Successfully update Total Userwise Analytics: ')
               })
             } else {
               // This means that this is the first entry for Total Userwise Analytics
@@ -226,7 +226,7 @@ const reqForCompany = function (optionsCompany) {
                 totalSurveys: body.payload[i].numberOfSurveys
               }
               models.TotalUserwiseAnalytics.create(respData).then(analyticsResult => {
-                logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ' + JSON.stringify(analyticsResult))
+                logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ')
               })
             }
           })
@@ -264,7 +264,7 @@ const reqForPage = function (optionsPage) {
         }
 
         models.PageAggregate.create(respData).then(savedData => {
-          logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+          logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table
           models.TotalPagewiseAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
             if (result) {
@@ -276,7 +276,7 @@ const reqForPage = function (optionsPage) {
                 pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
               }
               result.updateAttributes(updatePayload).then(result2 => {
-                logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ' + JSON.stringify(result2))
+                logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
               })
             } else {
               // This means that this is the first entry for Total Userwise Analytics
@@ -290,7 +290,7 @@ const reqForPage = function (optionsPage) {
                 pageLikes: body.payload[i].pageLikes
               }
               models.TotalPagewiseAnalytics.create(analyticsPayload).then(analyticsResult => {
-                logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ' + JSON.stringify(analyticsResult))
+                logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
               })
             }
           })
@@ -317,12 +317,12 @@ const reqForAutoposting = function (optionsAutoposting) {
 
       if (body) {
         let respData
-        for (let i = 0, length = body.length; i < length; i++) {
+        for (let i = 0, length = body.payload.length; i < length; i++) {
           respData = {
             userId: body.payload[i].userId,
-            autopostingId: body.payload[i].autopostingId,
-            type: body.payload[i].type,
-            pageId: body.payload[i].pageId,
+            autopostingId: body.payload[i]._id,
+            type: body.payload[i].subscriptionType,
+            pageId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
           saveToDatabase(respData, body.payload[i].type)
@@ -340,13 +340,14 @@ const reqForAutoposting = function (optionsAutoposting) {
       }
 
       if (body) {
+        logger.serverLog(TAG, `Autoposting data ${JSON.stringify(body)}`)
         let respData
-        for (let i = 0, length = body.length; i < length; i++) {
+        for (let i = 0, length = body.payload.length; i < length; i++) {
           respData = {
             userId: body.payload[i].userId,
-            autopostingId: body.payload[i].autopostingId,
-            type: body.payload[i].type,
-            twitterId: body.payload[i].twitterId,
+            autopostingId: body.payload[i]._id,
+            type: body.payload[i].subscriptionType,
+            twitterId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
           saveToDatabase(respData, body.payload[i].type)
@@ -368,9 +369,9 @@ const reqForAutoposting = function (optionsAutoposting) {
         for (let i = 0, length = body.length; i < length; i++) {
           respData = {
             userId: body.payload[i].userId,
-            autopostingId: body.payload[i].autopostingId,
-            type: body.payload[i].type,
-            wordpressId: body.payload[i].wordpressId,
+            autopostingId: body.payload[i]._id,
+            type: body.payload[i].subscriptionType,
+            wordpressId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
           saveToDatabase(respData, body.payload[i].type)
@@ -382,7 +383,7 @@ const reqForAutoposting = function (optionsAutoposting) {
 
 const saveToDatabase = function (respData, type) {
   models.AutopostingAggregate.create(respData).then(savedData => {
-    logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+    logger.serverLog(TAG, 'Successfully Saved: Autoposting Aggregate')
   })
     .catch(error => {
       logger.serverLog(TAG, 'Error while saving autoposting' + type + 'to DB: ' + JSON.stringify(error))

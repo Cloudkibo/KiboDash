@@ -130,7 +130,6 @@ const reqForPlatform = function (optionsPlatform) {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-    console.log(body)
     // Checking if the truthiness satisfied
     if (body) {
       let respData = {
@@ -143,10 +142,33 @@ const reqForPlatform = function (optionsPlatform) {
         totalSurveys: body.payload.totalSurveys
       }
 
-      console.log(respData)
-
       models.PlatformAggregate.create(respData).then(savedData => {
         logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+        // Going to update total Platform Analytics table
+        models.TotalPlatformwiseAnalytics.find().then(result => {
+          if (result) {
+            let updatePayload = {
+              totalConnectedPages: result.dataValues.totalConnectedPages + body.payload.connectedPages,
+              totalPages: result.dataValues.totalPages + body.payload.totalPages,
+              totalUsers: result.dataValues.totalUsers + body.payload.totalUsers,
+              totalSubscribers: result.dataValues.totalSubscribers + body.payload.totalSubscribers,
+              totalBroadcasts: result.dataValues.totalBroadcasts + body.payload.totalBroadcasts,
+              totalPolls: result.dataValues.totalPolls + body.payload.totalPolls,
+              totalSurveys: result.dataValues.totalSurveys + body.payload.totalSurveys
+            }
+            result.updateAttributes(updatePayload).then(result2 => {
+              logger.serverLog(TAG, 'Successfully update Total Platformwise Analytics: ' + JSON.stringify(result2))
+            })
+              .catch(error => {
+                logger.serverLog(TAG, 'Error While update user wise analytics: ' + JSON.stringify(error))
+              })
+          } else {
+            // It means this is the first entry for platform wise analytics
+            models.TotalPlatformwiseAnalytics.create(respData).then(analyticsResult => {
+              logger.serverLog(TAG, 'Successfully saved Total Platformwise Analytics: ' + JSON.stringify(analyticsResult))
+            })
+          }
+        })
       })
         .catch(error => {
           logger.serverLog(TAG, 'Error while saving platform data to DB: ' + JSON.stringify(error))
@@ -160,24 +182,57 @@ const reqForCompany = function (optionsCompany) {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-
     // Checking if the body is truthy
     if (body) {
-      let respData
-      for (let i = 0, length = body.length; i < length; i++) {
+      let respData, updatePayload, analyticsPayload
+      for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
-          totalConnectedPages: body.payload[i].connectedPages,
-          totalPages: body.payload[i].totalPages,
-          totalSubscribers: body.payload[i].totalSubscribers,
-          totalBroadcasts: body.payload[i].totalBroadcasts,
-          totalPolls: body.payload[i].totalPolls,
-          totalSurveys: body.payload[i].totalSurveys,
+          totalConnectedPages: body.payload[i].numberOfConnectedPages,
+          totalPages: body.payload[i].numberOfPages,
+          totalSubscribers: body.payload[i].numberOfSubscribers,
+          totalBroadcasts: body.payload[i].numberOfBroadcasts,
+          totalPolls: body.payload[i].numberOfPolls,
+          totalSurveys: body.payload[i].numberOfSurveys,
           companyId: body.payload[i].companyId,
-          companyDomain: body.payload[i].companyDomain
+          companyDomain: body.payload[i].userId
         }
 
         models.UserAggregate.create(respData).then(savedData => {
           logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+          // Going to update total Platform Analytics table
+          models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
+            if (result) {
+              updatePayload = {
+                totalConnectedPages: result.dataValues.totalConnectedPages + body.payload[i].numberOfConnectedPages,
+                totalPages: result.dataValues.totalPages + body.payload[i].numberOfPages,
+                totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
+                totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
+                totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
+                totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys
+              }
+              result.updateAttributes(updatePayload).then(result2 => {
+                logger.serverLog(TAG, 'Successfully update Total Userwise Analytics: ' + JSON.stringify(result2))
+              })
+            } else {
+              // This means that this is the first entry for Total Userwise Analytics
+              analyticsPayload = {
+                companyId: body.payload[i].companyId,
+                companyDomain: body.payload[i].userId,
+                totalConnectedPages: body.payload[i].numberOfConnectedPages,
+                totalPages: body.payload[i].numberOfPages,
+                totalSubscribers: body.payload[i].numberOfSubscribers,
+                totalBroadcasts: body.payload[i].numberOfBroadcasts,
+                totalPolls: body.payload[i].numberOfPolls,
+                totalSurveys: body.payload[i].numberOfSurveys
+              }
+              models.TotalUserwiseAnalytics.create(respData).then(analyticsResult => {
+                logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ' + JSON.stringify(analyticsResult))
+              })
+            }
+          })
+            .catch(error => {
+              logger.serverLog(TAG, 'Error While update user wise analytics: ' + JSON.stringify(error))
+            })
         })
           .catch(error => {
             logger.serverLog(TAG, 'Error While saving company data to DB: ' + JSON.stringify(error))
@@ -195,13 +250,14 @@ const reqForPage = function (optionsPage) {
 
     // Checking if the body is truthy
     if (body) {
-      let respData
-      for (let i = 0, length = body.length; i < length; i++) {
+      let respData, updatePayload, analyticsPayload
+      console.log(body)
+      for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
-          totalSubscribers: body.payload[i].Totalsubscribers,
-          totalBroadcasts: body.payload[i].Totalbroadcasts,
-          totalPolls: body.payload[i].Totalpolls,
-          totalSurveys: body.payload[i].Totalsurveys,
+          totalSubscribers: body.payload[i].numberOfSubscribers,
+          totalBroadcasts: body.payload[i].numberOfBroadcasts,
+          totalPolls: body.payload[i].numberOfPolls,
+          totalSurveys: body.payload[i].numberOfSurveys,
           pageId: body.payload[i].pageId,
           pageName: body.payload[i].pageName,
           pageLikes: body.payload[i].pageLikes
@@ -209,6 +265,38 @@ const reqForPage = function (optionsPage) {
 
         models.PageAggregate.create(respData).then(savedData => {
           logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+          // Going to update total Platform Analytics table
+          models.TotalPagewiseAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
+            if (result) {
+              updatePayload = {
+                totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
+                totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
+                totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
+                totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys,
+                pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
+              }
+              result.updateAttributes(updatePayload).then(result2 => {
+                logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ' + JSON.stringify(result2))
+              })
+            } else {
+              // This means that this is the first entry for Total Userwise Analytics
+              analyticsPayload = {
+                totalSubscribers: body.payload[i].numberOfSubscribers,
+                totalBroadcasts: body.payload[i].numberOfBroadcasts,
+                totalPolls: body.payload[i].numberOfPolls,
+                totalSurveys: body.payload[i].numberOfSurveys,
+                pageId: body.payload[i].pageId,
+                pageName: body.payload[i].pageName,
+                pageLikes: body.payload[i].pageLikes
+              }
+              models.TotalPagewiseAnalytics.create(analyticsPayload).then(analyticsResult => {
+                logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ' + JSON.stringify(analyticsResult))
+              })
+            }
+          })
+            .catch(error => {
+              logger.serverLog(TAG, 'Error While update page wise analytics: ' + JSON.stringify(error))
+            })
         })
           .catch(error => {
             logger.serverLog(TAG, 'Error while saving page data to DB: ' + JSON.stringify(error))

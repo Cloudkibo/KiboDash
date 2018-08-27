@@ -126,7 +126,6 @@ const reqForPlatform = function (optionsPlatform) {
     body = JSON.parse(body)
     // Checking if the truthiness satisfied
     if (body && body.payload) {
-      console.log('inside resp for platform: ' + body)
       let respData = {
         totalConnectedPages: body.payload.connectedPages,
         totalPages: body.payload.totalPages,
@@ -247,7 +246,6 @@ const reqForPage = function (optionsPage) {
     // Checking if the body is truthy
     if (body && body.payload) {
       let respData, updatePayload, analyticsPayload
-      console.log(body)
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
           totalSubscribers: body.payload[i].numberOfSubscribers,

@@ -3,7 +3,7 @@
  */
 
 module.exports = function (app) {
-  // app.use('admin', require('./api/admin'))
+  app.use('/admin', require('./api/admin'))
   app.use('/api/v1/UserwiseData', require('./api/v1/UserwiseData'))
   app.use('/api/v1/PagewiseData', require('./api/v1/PagewiseData'))
   app.use('/api/v1/PlatformwiseData', require('./api/v1/PlatformwiseData'))

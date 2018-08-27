@@ -33,10 +33,8 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       }
 
       let optionsPlatform = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL + getplatformdata
+        form: {startDate: startDate},
+        url: baseURL + getplatformdata
       }
       reqForPlatform(optionsPlatform)
     })
@@ -59,10 +57,8 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       }
 
       let optionsCompany = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL + getcompanydata
+        form: {startDate: startDate},
+        url: baseURL + getcompanydata
       }
       reqForCompany(optionsCompany)
     })
@@ -85,10 +81,8 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       }
 
       let optionsPage = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL + getpagedata
+        form: {startDate: startDate},
+        url: baseURL + getpagedata
       }
       reqForPage(optionsPage)
     })
@@ -109,12 +103,11 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       if (startDate === undefined) {
         startDate = ''
       }
-
       let optionsAutoposting = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL
+        form: {
+          startDate: startDate
+        },
+        url: baseURL
       }
       reqForAutoposting(optionsAutoposting)
     })
@@ -126,13 +119,13 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
 }())
 
 const reqForPlatform = function (optionsPlatform) {
-  request(optionsPlatform, (error, response, body) => {
+  request.post(optionsPlatform, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-    console.log(body)
+    body = JSON.parse(body)
     // Checking if the truthiness satisfied
-    if (body) {
+    if (body && body.payload) {
       let respData = {
         totalConnectedPages: body.payload.connectedPages,
         totalPages: body.payload.totalPages,
@@ -143,10 +136,33 @@ const reqForPlatform = function (optionsPlatform) {
         totalSurveys: body.payload.totalSurveys
       }
 
-      console.log(respData)
-
       models.PlatformAggregate.create(respData).then(savedData => {
-        logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+        logger.serverLog(TAG, 'Successfully Saved: Platform Aggregate')
+        // Going to update total Platform Analytics table
+        models.TotalPlatformwiseAnalytics.find().then(result => {
+          if (result) {
+            let updatePayload = {
+              totalConnectedPages: body.payload.connectedPages,
+              totalPages: body.payload.totalPages,
+              totalUsers: result.dataValues.totalUsers + body.payload.totalUsers,
+              totalSubscribers: result.dataValues.totalSubscribers + body.payload.totalSubscribers,
+              totalBroadcasts: result.dataValues.totalBroadcasts + body.payload.totalBroadcasts,
+              totalPolls: result.dataValues.totalPolls + body.payload.totalPolls,
+              totalSurveys: result.dataValues.totalSurveys + body.payload.totalSurveys
+            }
+            result.updateAttributes(updatePayload).then(result2 => {
+              logger.serverLog(TAG, 'Successfully update Total Platformwise Analytics: ')
+            })
+              .catch(error => {
+                logger.serverLog(TAG, 'Error While update user wise analytics: ' + JSON.stringify(error))
+              })
+          } else {
+            // It means this is the first entry for platform wise analytics
+            models.TotalPlatformwiseAnalytics.create(respData).then(analyticsResult => {
+              logger.serverLog(TAG, 'Successfully saved Total Platformwise Analytics: ')
+            })
+          }
+        })
       })
         .catch(error => {
           logger.serverLog(TAG, 'Error while saving platform data to DB: ' + JSON.stringify(error))
@@ -156,28 +172,62 @@ const reqForPlatform = function (optionsPlatform) {
 }
 
 const reqForCompany = function (optionsCompany) {
-  request(optionsCompany, (error, response, body) => {
+  request.post(optionsCompany, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-
+    body = JSON.parse(body)
     // Checking if the body is truthy
-    if (body) {
-      let respData
-      for (let i = 0, length = body.length; i < length; i++) {
+    if (body && body.payload) {
+      let respData, updatePayload, analyticsPayload
+      for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
-          totalConnectedPages: body.payload[i].connectedPages,
-          totalPages: body.payload[i].totalPages,
-          totalSubscribers: body.payload[i].totalSubscribers,
-          totalBroadcasts: body.payload[i].totalBroadcasts,
-          totalPolls: body.payload[i].totalPolls,
-          totalSurveys: body.payload[i].totalSurveys,
+          totalConnectedPages: body.payload[i].numberOfConnectedPages,
+          totalPages: body.payload[i].numberOfPages,
+          totalSubscribers: body.payload[i].numberOfSubscribers,
+          totalBroadcasts: body.payload[i].numberOfBroadcasts,
+          totalPolls: body.payload[i].numberOfPolls,
+          totalSurveys: body.payload[i].numberOfSurveys,
           companyId: body.payload[i].companyId,
-          companyDomain: body.payload[i].companyDomain
+          companyDomain: body.payload[i].userId
         }
 
         models.UserAggregate.create(respData).then(savedData => {
-          logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+          logger.serverLog(TAG, 'Successfully Saved: UserAggregate')
+          // Going to update total Platform Analytics table
+          models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
+            if (result) {
+              updatePayload = {
+                totalConnectedPages: body.payload[i].numberOfConnectedPages,
+                totalPages: body.payload[i].numberOfPages,
+                totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
+                totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
+                totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
+                totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys
+              }
+              result.updateAttributes(updatePayload).then(result2 => {
+                logger.serverLog(TAG, 'Successfully update Total Userwise Analytics: ')
+              })
+            } else {
+              // This means that this is the first entry for Total Userwise Analytics
+              analyticsPayload = {
+                companyId: body.payload[i].companyId,
+                companyDomain: body.payload[i].userId,
+                totalConnectedPages: body.payload[i].numberOfConnectedPages,
+                totalPages: body.payload[i].numberOfPages,
+                totalSubscribers: body.payload[i].numberOfSubscribers,
+                totalBroadcasts: body.payload[i].numberOfBroadcasts,
+                totalPolls: body.payload[i].numberOfPolls,
+                totalSurveys: body.payload[i].numberOfSurveys
+              }
+              models.TotalUserwiseAnalytics.create(respData).then(analyticsResult => {
+                logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ')
+              })
+            }
+          })
+            .catch(error => {
+              logger.serverLog(TAG, 'Error While update user wise analytics: ' + JSON.stringify(error))
+            })
         })
           .catch(error => {
             logger.serverLog(TAG, 'Error While saving company data to DB: ' + JSON.stringify(error))
@@ -188,27 +238,59 @@ const reqForCompany = function (optionsCompany) {
 }
 
 const reqForPage = function (optionsPage) {
-  request(optionsPage, (error, response, body) => {
+  request.post(optionsPage, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-
+    body = JSON.parse(body)
     // Checking if the body is truthy
-    if (body) {
-      let respData
-      for (let i = 0, length = body.length; i < length; i++) {
+    if (body && body.payload) {
+      let respData, updatePayload, analyticsPayload
+      for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
-          totalSubscribers: body.payload[i].Totalsubscribers,
-          totalBroadcasts: body.payload[i].Totalbroadcasts,
-          totalPolls: body.payload[i].Totalpolls,
-          totalSurveys: body.payload[i].Totalsurveys,
+          totalSubscribers: body.payload[i].numberOfSubscribers,
+          totalBroadcasts: body.payload[i].numberOfBroadcasts,
+          totalPolls: body.payload[i].numberOfPolls,
+          totalSurveys: body.payload[i].numberOfSurveys,
           pageId: body.payload[i].pageId,
           pageName: body.payload[i].pageName,
           pageLikes: body.payload[i].pageLikes
         }
 
         models.PageAggregate.create(respData).then(savedData => {
-          logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+          logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
+          // Going to update total Platform Analytics table
+          models.TotalPagewiseAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
+            if (result) {
+              updatePayload = {
+                totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
+                totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
+                totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
+                totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys,
+                pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
+              }
+              result.updateAttributes(updatePayload).then(result2 => {
+                logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
+              })
+            } else {
+              // This means that this is the first entry for Total Userwise Analytics
+              analyticsPayload = {
+                totalSubscribers: body.payload[i].numberOfSubscribers,
+                totalBroadcasts: body.payload[i].numberOfBroadcasts,
+                totalPolls: body.payload[i].numberOfPolls,
+                totalSurveys: body.payload[i].numberOfSurveys,
+                pageId: body.payload[i].pageId,
+                pageName: body.payload[i].pageName,
+                pageLikes: body.payload[i].pageLikes
+              }
+              models.TotalPagewiseAnalytics.create(analyticsPayload).then(analyticsResult => {
+                logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
+              })
+            }
+          })
+            .catch(error => {
+              logger.serverLog(TAG, 'Error While update page wise analytics: ' + JSON.stringify(error))
+            })
         })
           .catch(error => {
             logger.serverLog(TAG, 'Error while saving page data to DB: ' + JSON.stringify(error))
@@ -221,23 +303,25 @@ const reqForPage = function (optionsPage) {
 const reqForAutoposting = function (optionsAutoposting) {
   // Below code will request for autoposting for facebook autoposting
   (function () {
-    optionsAutoposting.uri = baseURL + getfacebookauto
-    request(optionsAutoposting, (error, response, body) => {
+    optionsAutoposting.url = baseURL + getfacebookauto
+    logger.serverLog(TAG, 'Options: ' + JSON.stringify(optionsAutoposting))
+    request.post(optionsAutoposting, (error, response, body) => {
       if (error) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
-
-      if (body) {
+      body = JSON.parse(body)
+      logger.serverLog(TAG, `response data:  ${body}`)
+      if (body && body.payload) {
         let respData
-        for (let i = 0, length = body.length; i < length; i++) {
+        for (let i = 0, length = body.payload.length; i < length; i++) {
           respData = {
             userId: body.payload[i].userId,
-            autopostingId: body.payload[i].autopostingId,
-            type: body.payload[i].type,
-            pageId: body.payload[i].pageId,
+            autopostingId: body.payload[i]._id,
+            type: body.payload[i].subscriptionType,
+            pageId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body.payload[i].type)
+          saveToDatabase(respData, body.payload[i].subscriptionType)
         }
       }
     })
@@ -245,23 +329,24 @@ const reqForAutoposting = function (optionsAutoposting) {
 
   // Below code will request for autoposting for twitter autoposting
   (function () {
-    optionsAutoposting.uri = baseURL + gettwitterauto
-    request(optionsAutoposting, (error, response, body) => {
+    optionsAutoposting.url = baseURL + gettwitterauto
+    request.post(optionsAutoposting, (error, response, body) => {
       if (error) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
-
-      if (body) {
+      body = JSON.parse(body)
+      if (body && body.payload) {
+        logger.serverLog(TAG, `Autoposting data ${JSON.stringify(body)}`)
         let respData
-        for (let i = 0, length = body.length; i < length; i++) {
+        for (let i = 0, length = body.payload.length; i < length; i++) {
           respData = {
             userId: body.payload[i].userId,
-            autopostingId: body.payload[i].autopostingId,
-            type: body.payload[i].type,
-            twitterId: body.payload[i].twitterId,
+            autopostingId: body.payload[i]._id,
+            type: body.payload[i].subscriptionType,
+            twitterId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body.payload[i].type)
+          saveToDatabase(respData, body.payload[i].subscriptionType)
         }
       }
     })
@@ -269,23 +354,23 @@ const reqForAutoposting = function (optionsAutoposting) {
 
   // Below code will request for autoposting for wordpress autoposting
   (function () {
-    optionsAutoposting.uri = baseURL + getwordpressauto
-    request(optionsAutoposting, (error, response, body) => {
+    optionsAutoposting.url = baseURL + getwordpressauto
+    request.post(optionsAutoposting, (error, response, body) => {
       if (error) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
-
-      if (body) {
+      body = JSON.parse(body)
+      if (body && body.payload) {
         let respData
         for (let i = 0, length = body.length; i < length; i++) {
           respData = {
             userId: body.payload[i].userId,
-            autopostingId: body.payload[i].autopostingId,
-            type: body.payload[i].type,
-            wordpressId: body.payload[i].wordpressId,
+            autopostingId: body.payload[i]._id,
+            type: body.payload[i].subscriptionType,
+            wordpressId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body.payload[i].type)
+          saveToDatabase(respData, body.payload[i].subscriptionType)
         }
       }
     })
@@ -294,7 +379,7 @@ const reqForAutoposting = function (optionsAutoposting) {
 
 const saveToDatabase = function (respData, type) {
   models.AutopostingAggregate.create(respData).then(savedData => {
-    logger.serverLog(TAG, 'Successfully Saved: ' + JSON.stringify(savedData))
+    logger.serverLog(TAG, 'Successfully Saved: Autoposting Aggregate')
   })
     .catch(error => {
       logger.serverLog(TAG, 'Error while saving autoposting' + type + 'to DB: ' + JSON.stringify(error))

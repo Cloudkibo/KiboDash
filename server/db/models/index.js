@@ -10,7 +10,12 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable])
 } else {
   let dbUrl = 'postgresql://' + config.username + ':' + config.password + '@' + config.host + ':' + config.port + '/' + config.database
-  sequelize = new Sequelize(dbUrl)
+  sequelize = new Sequelize(dbUrl,  {
+
+    // disable logging; default: console.log
+    logging: false
+  
+  })
 }
 
 fs

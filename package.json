@@ -13,7 +13,7 @@
     "stop:prod": "forever stopall",
     "debug": "cross-env DEBUG=express:router:route,express:application,kibopush:* NODE_ENV=development nodemon --trace-sync-io server/app.js",
     "lint": "echo 'Pre-commit checks...' && standard --fix && echo \"No code style errors found.\"",
-    "start": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost nodemon server/app.js",
+    "start": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost nodemon server/app.js --trace-sync-io",
     "start:dayem": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost PORT=5050 nodemon server/app.js",
     "start:asad": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost node mytests/test.js"
   },
@@ -50,6 +50,7 @@
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "request": "^2.88.0",
+    "request-promise": "^4.2.2",
     "sequelize": "^4.38.0",
     "winston": "^3.0.0"
   },

@@ -2,6 +2,7 @@
 const request = require('request')
 const logger = require('./../server/components/logger')
 const TAG = '/cron/fetch.js'
+const rp = require('request-promise')
 
 // Model Imports
 const models = require('./../server/db/models')
@@ -33,10 +34,8 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       }
 
       let optionsPlatform = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL + getplatformdata
+        form: {startDate: startDate},
+        url: baseURL + getplatformdata
       }
       reqForPlatform(optionsPlatform)
     })
@@ -59,10 +58,8 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       }
 
       let optionsCompany = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL + getcompanydata
+        form: {startDate: startDate},
+        url: baseURL + getcompanydata
       }
       reqForCompany(optionsCompany)
     })
@@ -85,10 +82,8 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       }
 
       let optionsPage = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL + getpagedata
+        form: {startDate: startDate},
+        url: baseURL + getpagedata
       }
       reqForPage(optionsPage)
     })
@@ -109,12 +104,12 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       if (startDate === undefined) {
         startDate = ''
       }
-
+      
       let optionsAutoposting = {
-        method: 'POST',
-        json: true,
-        formData: startDate,
-        uri: baseURL
+        form: {
+          startDate: startDate
+        },
+        url: baseURL
       }
       reqForAutoposting(optionsAutoposting)
     })
@@ -126,12 +121,14 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
 }())
 
 const reqForPlatform = function (optionsPlatform) {
-  request(optionsPlatform, (error, response, body) => {
+  request.post(optionsPlatform, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
+    body = JSON.parse(body)
     // Checking if the truthiness satisfied
-    if (body) {
+    if (body && body.payload) {
+      console.log('inside resp for platform: ' + body)
       let respData = {
         totalConnectedPages: body.payload.connectedPages,
         totalPages: body.payload.totalPages,
@@ -148,8 +145,8 @@ const reqForPlatform = function (optionsPlatform) {
         models.TotalPlatformwiseAnalytics.find().then(result => {
           if (result) {
             let updatePayload = {
-              totalConnectedPages: result.dataValues.totalConnectedPages + body.payload.connectedPages,
-              totalPages: result.dataValues.totalPages + body.payload.totalPages,
+              totalConnectedPages: body.payload.connectedPages,
+              totalPages: body.payload.totalPages,
               totalUsers: result.dataValues.totalUsers + body.payload.totalUsers,
               totalSubscribers: result.dataValues.totalSubscribers + body.payload.totalSubscribers,
               totalBroadcasts: result.dataValues.totalBroadcasts + body.payload.totalBroadcasts,
@@ -178,12 +175,13 @@ const reqForPlatform = function (optionsPlatform) {
 }
 
 const reqForCompany = function (optionsCompany) {
-  request(optionsCompany, (error, response, body) => {
+  request.post(optionsCompany, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
+    body = JSON.parse(body)
     // Checking if the body is truthy
-    if (body) {
+    if (body && body.payload) {
       let respData, updatePayload, analyticsPayload
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
@@ -203,8 +201,8 @@ const reqForCompany = function (optionsCompany) {
           models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
             if (result) {
               updatePayload = {
-                totalConnectedPages: result.dataValues.totalConnectedPages + body.payload[i].numberOfConnectedPages,
-                totalPages: result.dataValues.totalPages + body.payload[i].numberOfPages,
+                totalConnectedPages: body.payload[i].numberOfConnectedPages,
+                totalPages: body.payload[i].numberOfPages,
                 totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
                 totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
                 totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
@@ -243,13 +241,13 @@ const reqForCompany = function (optionsCompany) {
 }
 
 const reqForPage = function (optionsPage) {
-  request(optionsPage, (error, response, body) => {
+  request.post(optionsPage, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
-
+    body = JSON.parse(body)
     // Checking if the body is truthy
-    if (body) {
+    if (body && body.payload) {
       let respData, updatePayload, analyticsPayload
       console.log(body)
       for (let i = 0, length = body.payload.length; i < length; i++) {
@@ -309,13 +307,15 @@ const reqForPage = function (optionsPage) {
 const reqForAutoposting = function (optionsAutoposting) {
   // Below code will request for autoposting for facebook autoposting
   (function () {
-    optionsAutoposting.uri = baseURL + getfacebookauto
-    request(optionsAutoposting, (error, response, body) => {
+    optionsAutoposting.url = baseURL + getfacebookauto
+    logger.serverLog(TAG, 'Options: ' + JSON.stringify(optionsAutoposting))
+    request.post(optionsAutoposting, (error, response, body) => {
       if (error) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
-
-      if (body) {
+      body = JSON.parse(body)
+      logger.serverLog(TAG, `response data:  ${body}`)
+      if (body && body.payload) {
         let respData
         for (let i = 0, length = body.payload.length; i < length; i++) {
           respData = {
@@ -325,7 +325,7 @@ const reqForAutoposting = function (optionsAutoposting) {
             pageId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body.payload[i].type)
+          saveToDatabase(respData, body.payload[i].subscriptionType)
         }
       }
     })
@@ -333,13 +333,13 @@ const reqForAutoposting = function (optionsAutoposting) {
 
   // Below code will request for autoposting for twitter autoposting
   (function () {
-    optionsAutoposting.uri = baseURL + gettwitterauto
-    request(optionsAutoposting, (error, response, body) => {
+    optionsAutoposting.url = baseURL + gettwitterauto
+    request.post(optionsAutoposting, (error, response, body) => {
       if (error) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
-
-      if (body) {
+      body = JSON.parse(body)
+      if (body && body.payload) {
         logger.serverLog(TAG, `Autoposting data ${JSON.stringify(body)}`)
         let respData
         for (let i = 0, length = body.payload.length; i < length; i++) {
@@ -350,7 +350,7 @@ const reqForAutoposting = function (optionsAutoposting) {
             twitterId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body.payload[i].type)
+          saveToDatabase(respData, body.payload[i].subscriptionType)
         }
       }
     })
@@ -358,13 +358,13 @@ const reqForAutoposting = function (optionsAutoposting) {
 
   // Below code will request for autoposting for wordpress autoposting
   (function () {
-    optionsAutoposting.uri = baseURL + getwordpressauto
-    request(optionsAutoposting, (error, response, body) => {
+    optionsAutoposting.url = baseURL + getwordpressauto
+    request.post(optionsAutoposting, (error, response, body) => {
       if (error) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
-
-      if (body) {
+      body = JSON.parse(body)
+      if (body && body.payload) {
         let respData
         for (let i = 0, length = body.length; i < length; i++) {
           respData = {
@@ -374,7 +374,7 @@ const reqForAutoposting = function (optionsAutoposting) {
             wordpressId: body.payload[i].subscriptionUrl,
             totalAutopostingSent: body.payload[i].totalAutopostingSent
           }
-          saveToDatabase(respData, body.payload[i].type)
+          saveToDatabase(respData, body.payload[i].subscriptionType)
         }
       }
     })

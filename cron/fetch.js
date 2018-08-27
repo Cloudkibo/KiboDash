@@ -2,7 +2,6 @@
 const request = require('request')
 const logger = require('./../server/components/logger')
 const TAG = '/cron/fetch.js'
-const rp = require('request-promise')
 
 // Model Imports
 const models = require('./../server/db/models')
@@ -104,7 +103,6 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       if (startDate === undefined) {
         startDate = ''
       }
-      
       let optionsAutoposting = {
         form: {
           startDate: startDate

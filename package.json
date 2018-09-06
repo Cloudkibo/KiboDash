@@ -8,7 +8,7 @@
     "migrations": "node --experimental-modules ./migrations/migrations.mjs",
     "fetch": "node --experimental-modules ./cron/fetch.mjs",
     "start:cron_script": "sh cronjob_script",
-    "start:local_cron": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost node cron/fetch.js",
+    "start:local_cron": "cross-env DEBUG=kibodash:* URL=production DOMAIN=localhost node cron/fetch.js",
     "start:prod": "cross-env DEBUG=kibodash:* NODE_ENV=production forever start server/app.js",
     "stop:prod": "forever stopall",
     "debug": "cross-env DEBUG=express:router:route,express:application,kibopush:* NODE_ENV=development nodemon --trace-sync-io server/app.js",

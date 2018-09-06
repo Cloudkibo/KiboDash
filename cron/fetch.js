@@ -4,11 +4,12 @@ const logger = require('./../server/components/logger')
 const TAG = '/cron/fetch.js'
 
 // Model Imports
+logger.serverLog(TAG, 'after models')
 const models = require('./../server/db/models')
-
+logger.serverLog(TAG, 'after models')
 // App base URL
 // const baseURL = 'https://staging.kibopush.com/api/kibodash'
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/kibodash' : 'https://staging.kibopush.com/api/kibodash'
+const baseURL = process.env.URL === 'development' ? 'http://localhost:3000/api/kibodash' : 'https://app.kibopush.com/api/kibodash'
 
 // API endpoints
 const getplatformdata = '/getPlatformData'

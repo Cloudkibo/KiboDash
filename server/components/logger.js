@@ -4,7 +4,7 @@ exports.serverLog = function (label, data) {
   const namespace = `kibodash:${label}`
   const debug = require('debug')(namespace)
 
-  if (config.env === 'development' || config.env === 'test') {
+  if (config.env === 'development' || config.env === 'test' || process.env.URL === 'production') {
     debug(data)
     console.log('inside logger ' + data)
     // todo use log levels like info, warn, error and debug

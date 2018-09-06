@@ -6,7 +6,7 @@ const TAG = '/cron/fetch.js'
 // Model Imports
 logger.serverLog(TAG, 'after models')
 const models = require('./../server/db/models')
-logger.serverLog(TAG, 'after models')
+console.log(TAG, 'after models')
 // App base URL
 // const baseURL = 'https://staging.kibopush.com/api/kibodash'
 const baseURL = process.env.URL === 'development' ? 'http://localhost:3000/api/kibodash' : 'https://app.kibopush.com/api/kibodash'

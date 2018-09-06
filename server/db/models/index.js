@@ -16,6 +16,7 @@ if (config.use_env_variable) {
     logging: false
   
   })
+  console.log('Config Vars', config)
 }
 
 fs

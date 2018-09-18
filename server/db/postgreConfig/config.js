@@ -29,5 +29,13 @@ module.exports = {
     'host': process.env.PROD_HOST,
     'port': process.env.PROD_PORT,
     'dialect': 'mysql'
+  },
+  'cron': {
+    'username': 'kibo',
+    'password': 'kibo4321',
+    'database': 'kibo',
+    'host': '127.0.0.1',
+    'port': '5432',
+    'dialect': 'mysql'
   }
 }

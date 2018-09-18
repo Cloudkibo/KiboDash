@@ -23,7 +23,7 @@ module.exports = {
     'dialect': 'mysql'
   },
   'production': {
-    'username': process.env.PROD_USERNAME,
+    'username': 'asad',
     'password': process.env.PROD_PASSWORD,
     'database': process.env.PROD_DATABASE,
     'host': process.env.PROD_HOST,

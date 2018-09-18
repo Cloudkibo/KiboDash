@@ -2,6 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
 const basename = path.basename(module.filename)
+console.log(process.env.NODE_ENV)
+console.log(process.env)
 const env = process.env.NODE_ENV || 'development'
 const config = require(`${__dirname}/../postgreConfig/config.js`)[env]
 const db = {}

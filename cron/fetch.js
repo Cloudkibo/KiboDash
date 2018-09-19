@@ -257,6 +257,7 @@ const reqForPage = function (optionsPage) {
     logger.serverLog(TAG, 'Inside req for Page: ' + util.inspect(body))
     // Checking if the body is truthy
     if (body && body.payload) {
+      logger.serverLog(TAG, 'Inside req for Page in if ')
       let respData, updatePayload, analyticsPayload
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
@@ -268,7 +269,7 @@ const reqForPage = function (optionsPage) {
           pageName: body.payload[i].pageName,
           pageLikes: body.payload[i].pageLikes
         }
-
+        logger.serverLog(TAG, 'Inside req for loop reqforpage ' + util.inspect(respData))
         models.PageAggregate.create(respData).then(savedData => {
           logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table

@@ -1,5 +1,6 @@
 // NPM Imports
 const request = require('request')
+const util = require('util')
 const logger = require('./../server/components/logger')
 const TAG = '/cron/fetch.js'
 
@@ -120,11 +121,13 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
 }())
 
 const reqForPlatform = function (optionsPlatform) {
+  logger.serverLog(TAG, 'Inside req for Platform: ')
   request.post(optionsPlatform, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
+    logger.serverLog(TAG, 'Inside req for Platform: ' + util.inspect(body))
     // Checking if the truthiness satisfied
     if (body && body.payload) {
       let respData = {
@@ -173,11 +176,13 @@ const reqForPlatform = function (optionsPlatform) {
 }
 
 const reqForCompany = function (optionsCompany) {
+  logger.serverLog(TAG, 'Inside req for Company: ')
   request.post(optionsCompany, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
+    logger.serverLog(TAG, 'Inside req for Company: ' + util.inspect(body))
     // Checking if the body is truthy
     if (body && body.payload) {
       let respData, updatePayload, analyticsPayload
@@ -239,11 +244,13 @@ const reqForCompany = function (optionsCompany) {
 }
 
 const reqForPage = function (optionsPage) {
+  logger.serverLog(TAG, 'Inside req for Page: ')
   request.post(optionsPage, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
+    logger.serverLog(TAG, 'Inside req for Page: ' + util.inspect(body))
     // Checking if the body is truthy
     if (body && body.payload) {
       let respData, updatePayload, analyticsPayload
@@ -302,6 +309,7 @@ const reqForPage = function (optionsPage) {
 }
 
 const reqForAutoposting = function (optionsAutoposting) {
+  logger.serverLog(TAG, 'Inside req for Autoposting')
   // Below code will request for autoposting for facebook autoposting
   (function () {
     optionsAutoposting.url = baseURL + getfacebookauto
@@ -311,6 +319,7 @@ const reqForAutoposting = function (optionsAutoposting) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
       body = JSON.parse(body)
+      logger.serverLog(TAG, 'Inside req for Autoposting Facebook: ' + util.inspect(body))
       logger.serverLog(TAG, `response data:  ${body}`)
       if (body && body.payload) {
         let respData
@@ -336,6 +345,7 @@ const reqForAutoposting = function (optionsAutoposting) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
       body = JSON.parse(body)
+      logger.serverLog(TAG, 'Inside req for Autoposting Twitter: ' + util.inspect(body))
       if (body && body.payload) {
         logger.serverLog(TAG, `Autoposting data ${JSON.stringify(body)}`)
         let respData
@@ -361,6 +371,7 @@ const reqForAutoposting = function (optionsAutoposting) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }
       body = JSON.parse(body)
+      logger.serverLog(TAG, 'Inside req for Autoposting Wordpress: ' + util.inspect(body))
       if (body && body.payload) {
         let respData
         for (let i = 0, length = body.length; i < length; i++) {

@@ -185,6 +185,7 @@ const reqForCompany = function (optionsCompany) {
     logger.serverLog(TAG, 'Inside req for Company: ' + util.inspect(body))
     // Checking if the body is truthy
     if (body && body.payload) {
+      logger.serverLog(TAG, 'Inside company if body: ' + util.inspect(body))
       let respData, updatePayload, analyticsPayload
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
@@ -197,6 +198,9 @@ const reqForCompany = function (optionsCompany) {
           companyId: body.payload[i].companyId,
           companyDomain: body.payload[i].userId
         }
+
+
+      logger.serverLog(TAG, 'Inside company loop: ' + util.inspect(respData))
 
         models.UserAggregate.create(respData).then(savedData => {
           logger.serverLog(TAG, 'Successfully Saved: UserAggregate')

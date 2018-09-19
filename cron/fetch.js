@@ -267,9 +267,8 @@ const reqForPage = function (optionsPage) {
           totalSurveys: body.payload[i].numberOfSurveys,
           pageId: body.payload[i].pageId,
           pageName: body.payload[i].pageName,
-          pageLikes: body.payload[i].pageLikes
+          pageLikes: 12// body.payload[i].pageLikes
         }
-        logger.serverLog(TAG, 'Inside req for loop reqforpage ' + util.inspect(respData))
         models.PageAggregate.create(respData).then(savedData => {
           logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table

@@ -343,10 +343,8 @@ const reqForAutoposting = function (optionsAutoposting) {
 
   // Below code will request for autoposting for twitter autoposting
   (function () {
-    console.log('in twitter')
     optionsAutoposting.url = baseURL + gettwitterauto
     request.post(optionsAutoposting, (error, response, body) => {
-      console.log('in twitter autoposting')
       if (error) {
         logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
       }

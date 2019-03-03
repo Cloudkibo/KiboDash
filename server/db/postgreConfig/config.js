@@ -2,11 +2,11 @@ require('dotenv').config()
 
 module.exports = {
   'development': {
-    'username': process.env.DEV_USERNAME,
-    'password': process.env.DEV_PASSWORD,
-    'database': process.env.DEV_DATABASE,
-    'host': process.env.DEV_HOST,
-    'port': process.env.DEV_PORT,
+    'username': process.env.DEV_USERNAME || 'postgres',
+    'password': process.env.DEV_PASSWORD || 'kibo1234',
+    'database': process.env.DEV_DATABASE || 'kibodash-anisha',
+    'host': process.env.DEV_HOST || 'localhost',
+    'port': process.env.DEV_PORT || '5432',
     'dialect': 'mysql',
     'pool': {
       'max': 30,

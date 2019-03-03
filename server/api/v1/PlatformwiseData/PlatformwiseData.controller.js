@@ -6,7 +6,9 @@ const TAG = '/server/api/v1/PlatformwiseData/PlatformwiseData.controller.js'
 
 exports.index = function (req, res) {
   logger.serverLog(TAG, 'Hit the All Platform Analytics endpoint')
+  console.log('in PlatformwiseData')
   models.TotalPlatformwiseAnalytics.findAll().then((data) => {
+    console.log('data in PlatformwiseData', data)
     res.status(200).json({ status: 'success', payload: data })
   })
     .catch((err) => {

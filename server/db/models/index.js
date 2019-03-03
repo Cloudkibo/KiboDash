@@ -16,7 +16,7 @@ if (config.use_env_variable) {
 
     // disable logging; default: console.log
     logging: false
-  
+
   })
   console.log('Config Vars', config)
 }
@@ -28,6 +28,9 @@ fs
     (file !== basename) &&
     (file.slice(-3) === '.js'))
   .forEach(file => {
+    console.log('file', file)
+    // console.log('path', path)
+    // console.log('__dirname', __dirname)
     const model = sequelize.import(path.join(__dirname, file))
     db[model.name] = model
   })

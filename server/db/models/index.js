@@ -2,8 +2,6 @@ const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
 const basename = path.basename(module.filename)
-console.log(process.env.NODE_ENV)
-console.log(process.env)
 const env = process.env.NODE_ENV || 'development'
 const config = require(`${__dirname}/../postgreConfig/config.js`)[env]
 const db = {}
@@ -16,9 +14,8 @@ if (config.use_env_variable) {
 
     // disable logging; default: console.log
     logging: false
-  
+
   })
-  console.log('Config Vars', config)
 }
 
 fs
@@ -28,6 +25,7 @@ fs
     (file !== basename) &&
     (file.slice(-3) === '.js'))
   .forEach(file => {
+    console.log('file', file)
     const model = sequelize.import(path.join(__dirname, file))
     db[model.name] = model
   })

@@ -7,10 +7,9 @@ const TAG = '/cron/fetch.js'
 // Model Imports
 logger.serverLog(TAG, 'after models')
 const models = require('./../server/db/models')
-console.log(TAG, 'after models')
 // App base URL
 // const baseURL = 'https://staging.kibopush.com/api/kibodash'
-const baseURL = process.env.URL === 'development' ? 'http://localhost:3000/api/kibodash' : 'https://app.kibopush.com/api/kibodash'
+const baseURL = process.env.URL === 'production' ? 'https://accounts.cloudkibo.com/api/kibodash' : 'http://localhost:3024/api/kibodash'
 
 // API endpoints
 const getplatformdata = '/getPlatformData'
@@ -268,7 +267,7 @@ const reqForPage = function (optionsPage) {
           totalSurveys: body.payload[i].numberOfSurveys,
           pageId: body.payload[i].pageId,
           pageName: body.payload[i].pageName,
-          pageLikes: body.payload[i].pageLikes
+          pageLikes: body.payload[i].likes
         }
         models.PageAggregate.create(respData).then(savedData => {
           logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')

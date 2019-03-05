@@ -93,7 +93,7 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
       }
     })
 
-  Request for Autoposting Aggregate Data
+  // Request for Autoposting Aggregate Data
   models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
     .then((data) => {
       // We are making a string because request library only supports strings for formData

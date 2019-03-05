@@ -94,29 +94,29 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
     })
 
   // Request for Autoposting Aggregate Data
-  models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-    .then((data) => {
-      // We are making a string because request library only supports strings for formData
-      let startDate = data[0] &&
-                       data[0].dataValues &&
-                       data[0].dataValues.createdAt &&
-                       data[0].dataValues.createdAt
-      if (startDate === undefined) {
-        startDate = ''
-      }
-      let optionsAutoposting = {
-        form: {
-          startDate: startDate
-        },
-        url: baseURL
-      }
-      reqForAutoposting(optionsAutoposting)
-    })
-    .catch((err) => {
-      if (err) {
-        logger.serverLog(TAG, 'Error Autoposting Date fetching:' + JSON.stringify(err))
-      }
-    })
+  // models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+  //   .then((data) => {
+  //     // We are making a string because request library only supports strings for formData
+  //     let startDate = data[0] &&
+  //                      data[0].dataValues &&
+  //                      data[0].dataValues.createdAt &&
+  //                      data[0].dataValues.createdAt
+  //     if (startDate === undefined) {
+  //       startDate = ''
+  //     }
+  //     let optionsAutoposting = {
+  //       form: {
+  //         startDate: startDate
+  //       },
+  //       url: baseURL
+  //     }
+  //     reqForAutoposting(optionsAutoposting)
+  //   })
+  //   .catch((err) => {
+  //     if (err) {
+  //       logger.serverLog(TAG, 'Error Autoposting Date fetching:' + JSON.stringify(err))
+  //     }
+  //   })
 }())
 
 const reqForPlatform = function (optionsPlatform) {

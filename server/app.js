@@ -40,6 +40,7 @@ if (env === 'development' || env === 'test') {
   /**
    * HTTP request logger
    */
+   console.log('development')
   app.use(morgan('dev'))
 }
 

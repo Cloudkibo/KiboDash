@@ -3,3 +3,7 @@ node_modules
 .envpy
 __pycache__
 .idea/
+.vscode/
+unused/
+mytests/
+*.log

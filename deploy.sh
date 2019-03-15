@@ -1,3 +1,4 @@
-git pull origin master
+git pull origin kibodash
 npm install
-pip install -r requirements.txt
+npm run stop:prod
+npm run start:prod

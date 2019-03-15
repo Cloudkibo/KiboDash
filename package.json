@@ -6,10 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrations": "node --experimental-modules ./migrations/migrations.mjs",
-    "fetch": "node --experimental-modules ./cron/fetch.mjs",
+    "fetch": "node ./cron/fetch.js",
     "start:cron_script": "sh cronjob_script",
-    "start:local_cron": "node ./cron/fetch.mjs"
+    "start:local_cron": "cross-env DEBUG=kibodash:* URL=production NODE_ENV=production DOMAIN=localhost node --trace-warnings cron/fetch.js",
+    "start:prod": "cross-env DEBUG=kibodash:* NODE_ENV=production forever start server/app.js",
+    "stop:prod": "forever stopall",
+    "debug": "cross-env DEBUG=express:router:route,express:application,kibopush:* NODE_ENV=development nodemon --trace-sync-io server/app.js",
+    "lint": "echo 'Pre-commit checks...' && standard --fix && echo \"No code style errors found.\"",
+    "start": "cross-env DEBUG=kibodash:* DOMAIN=localhost nodemon server/app.js --trace-warnings",
+    "start:dayem": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost PORT=5050 nodemon server/app.js",
+    "start:asad": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost node mytests/test.js"
   },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Cloudkibo/KiboDash.git"
@@ -18,17 +29,47 @@
     "Operational",
     "Dashboard"
   ],
-  "author": "Dayem Siddiqui, Baqar Jafri, Mehrish",
+  "author": "Dayem Siddiqui, Baqar Jafri, Mehrish, Asad Ullah",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Cloudkibo/KiboDash/issues"
   },
   "homepage": "https://github.com/Cloudkibo/KiboDash#readme",
   "dependencies": {
+    "compression": "^1.7.3",
+    "debug": "^2.6.8",
     "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "lodash": "^4.17.10",
+    "method-override": "^3.0.0",
     "mongodb": "^3.1.1",
     "mongoose": "^5.2.1",
+    "morgan": "^1.9.0",
     "mysql2": "^1.5.3",
-    "sequelize": "^4.38.0"
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "sequelize": "^4.38.0",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "nodemon": "^1.18.3",
+    "standard": "^11.0.1"
+  },
+  "standard": {
+    "ignore": [
+      "unused/*"
+    ],
+    "parser": "babel-eslint"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "unused/*",
+      "documentation/*"
+    ],
+    "delay": "1000"
   }
 }

@@ -1,9 +1,9 @@
 require('dotenv').config()
 
 module.exports = {
-  env: process.env.URL,
+  env: process.env.NODE_ENV,
 
   // Server port
-  port: process.env.PORT || 5050,
+  port: process.env.SERVER_PORT || 5050,
   ip: process.env.IP || undefined
 }

@@ -6,7 +6,14 @@ const TAG = '/server/api/v1/UserwiseData/UserwiseData.controller.js'
 
 exports.index = function (req, res) {
   logger.serverLog(TAG, 'Hit the All User Analytics endpoint')
+  models.UserAggregate.findAll().then((data) => {
+    console.log('in UserAggregate', data)
+  })
+    .catch((err) => {
+      res.status(500).json({ status: 'failed', payload: err })
+    })
   models.TotalUserwiseAnalytics.findAll().then((data) => {
+    console.log('in TotalUserwiseAnalytics', data)
     res.status(200).json({ status: 'success', payload: data })
   })
     .catch((err) => {

@@ -462,7 +462,7 @@ const getWordpressAutoposting = function (optionsAutoposting) {
     logger.serverLog(TAG, 'Inside req for Autoposting Wordpress: ' + util.inspect(body))
     if (body && body.payload) {
       let respData
-      for (let i = 0, length = body.length; i < length; i++) {
+      for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
           userId: body.payload[i].userId,
           autopostingId: body.payload[i]._id,

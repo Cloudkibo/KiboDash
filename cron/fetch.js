@@ -181,6 +181,7 @@ const reqForCompany = function (optionsCompany) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
+    console.log('body in company', body)
     logger.serverLog(TAG, 'Inside req for Company: ' + util.inspect(body))
     // Checking if the body is truthy
     if (body && body.payload) {
@@ -202,6 +203,7 @@ const reqForCompany = function (optionsCompany) {
       logger.serverLog(TAG, 'Inside company loop: ' + util.inspect(respData))
 
         models.UserAggregate.create(respData).then(savedData => {
+          console.log('UserAggregate create', savedData)
           logger.serverLog(TAG, 'Successfully Saved: UserAggregate')
           // Going to update total Platform Analytics table
           models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
@@ -230,6 +232,7 @@ const reqForCompany = function (optionsCompany) {
                 totalSurveys: body.payload[i].numberOfSurveys
               }
               models.TotalUserwiseAnalytics.create(analyticsPayload).then(analyticsResult => {
+                console.log('Successfully Saved to user wise analytics', analyticsResult)
                 logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ')
               })
             }

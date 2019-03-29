@@ -9,7 +9,7 @@ logger.serverLog(TAG, 'after models')
 const models = require('./../server/db/models')
 // App base URL
 // const baseURL = 'https://staging.kibopush.com/api/kibodash'
-const baseURL = process.env.URL === 'production' ? 'https://accounts.cloudkibo.com/api/kibodash' : 'http://localhost:3024/api/kibodash'
+const baseURL = process.env.URL === 'production' ? 'https://saccounts.cloudkibo.com/api/kibodash' : 'http://localhost:3024/api/kibodash'
 
 // API endpoints
 const getplatformdata = '/getPlatformData'
@@ -203,7 +203,6 @@ const reqForCompany = function (optionsCompany) {
       logger.serverLog(TAG, 'Inside company loop: ' + util.inspect(respData))
 
         models.UserAggregate.create(respData).then(savedData => {
-          console.log('UserAggregate create', savedData)
           logger.serverLog(TAG, 'Successfully Saved: UserAggregate')
           // Going to update total Platform Analytics table
           models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
@@ -232,7 +231,6 @@ const reqForCompany = function (optionsCompany) {
                 totalSurveys: body.payload[i].numberOfSurveys
               }
               models.TotalUserwiseAnalytics.create(analyticsPayload).then(analyticsResult => {
-                console.log('Successfully Saved to user wise analytics', analyticsResult)
                 logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ')
               })
             }
@@ -316,7 +314,6 @@ const reqForPage = function (optionsPage) {
 }
 
 const reqForAutoposting = function (optionsAutoposting) {
-  console.log('Inside req for Autoposting')
   logger.serverLog(TAG, 'Inside req for Autoposting')
   // Below code will request for autoposting for facebook autoposting
   getFacebookAutoposting(optionsAutoposting)

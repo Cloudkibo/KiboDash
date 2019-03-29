@@ -20,30 +20,30 @@ const gettwitterauto = '/getTwitterAutoposting'
 const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semicolan. Other wise the IIFE will fail
 
 // Going to use IIFE pattern to initialize the cron script (Entry point to main functionality)
-// (function () {
-//   // Request for Platform Aggregate data
-//   models.PlatformAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-//     .then((data) => {
-//       // We are making a string because request library only supports strings for formData
-//       let startDate = data[0] &&
-//                        data[0].dataValues &&
-//                        data[0].dataValues.createdAt &&
-//                        data[0].dataValues.createdAt
-//       if (startDate === undefined) {
-//         startDate = ''
-//       }
-//
-//       let optionsPlatform = {
-//         form: {startDate: startDate},
-//         url: baseURL + getplatformdata
-//       }
-//       reqForPlatform(optionsPlatform)
-//     })
-//     .catch((err) => {
-//       if (err) {
-//         logger.serverLog(TAG, 'Error Platform Date fetching: ' + JSON.stringify(err))
-//       }
-//     })
+(function () {
+  // Request for Platform Aggregate data
+  // models.PlatformAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+  //   .then((data) => {
+  //     // We are making a string because request library only supports strings for formData
+  //     let startDate = data[0] &&
+  //                      data[0].dataValues &&
+  //                      data[0].dataValues.createdAt &&
+  //                      data[0].dataValues.createdAt
+  //     if (startDate === undefined) {
+  //       startDate = ''
+  //     }
+  //
+  //     let optionsPlatform = {
+  //       form: {startDate: startDate},
+  //       url: baseURL + getplatformdata
+  //     }
+  //     reqForPlatform(optionsPlatform)
+  //   })
+  //   .catch((err) => {
+  //     if (err) {
+  //       logger.serverLog(TAG, 'Error Platform Date fetching: ' + JSON.stringify(err))
+  //     }
+  //   })
 
   // Request for Company Aggregate Data
   models.UserAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
@@ -92,8 +92,8 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
   //       logger.serverLog(TAG, 'Error Page Date fetching:' + JSON.stringify(err))
   //     }
   //   })
-  //
-  // // Request for Autoposting Aggregate Data
+
+  // Request for Autoposting Aggregate Data
   // models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
   //   .then((data) => {
   //     // We are making a string because request library only supports strings for formData

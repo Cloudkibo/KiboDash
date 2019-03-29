@@ -461,6 +461,7 @@ const getWordpressAutoposting = function (optionsAutoposting) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
+    console.log('wordpress payload', body)
     logger.serverLog(TAG, 'Inside req for Autoposting Wordpress: ' + util.inspect(body))
     if (body && body.payload) {
       let respData
@@ -472,6 +473,7 @@ const getWordpressAutoposting = function (optionsAutoposting) {
           wordpressId: body.payload[i].subscriptionUrl,
           totalAutopostingSent: body.payload[i].totalAutopostingSent
         }
+        console.log('in going to saveToDatabase')
         saveToDatabase(respData, body.payload[i].subscriptionType)
       }
     }

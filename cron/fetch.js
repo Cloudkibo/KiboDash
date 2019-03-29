@@ -229,7 +229,7 @@ const reqForCompany = function (optionsCompany) {
                 totalPolls: body.payload[i].numberOfPolls,
                 totalSurveys: body.payload[i].numberOfSurveys
               }
-              models.TotalUserwiseAnalytics.create(respData).then(analyticsResult => {
+              models.TotalUserwiseAnalytics.create(analyticsPayload).then(analyticsResult => {
                 logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ')
               })
             }
@@ -313,84 +313,167 @@ const reqForPage = function (optionsPage) {
 }
 
 const reqForAutoposting = function (optionsAutoposting) {
+  console.log('Inside req for Autoposting')
   logger.serverLog(TAG, 'Inside req for Autoposting')
   // Below code will request for autoposting for facebook autoposting
-  (function () {
-    optionsAutoposting.url = baseURL + getfacebookauto
-    logger.serverLog(TAG, 'Options: ' + JSON.stringify(optionsAutoposting))
-    request.post(optionsAutoposting, (error, response, body) => {
-      if (error) {
-        logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
-      }
-      body = JSON.parse(body)
-      logger.serverLog(TAG, 'Inside req for Autoposting Facebook: ' + util.inspect(body))
-      logger.serverLog(TAG, `response data:  ${body}`)
-      if (body && body.payload) {
-        let respData
-        for (let i = 0, length = body.payload.length; i < length; i++) {
-          respData = {
-            userId: body.payload[i].userId,
-            autopostingId: body.payload[i]._id,
-            type: body.payload[i].subscriptionType,
-            pageId: body.payload[i].subscriptionUrl,
-            totalAutopostingSent: body.payload[i].totalAutopostingSent
-          }
-          saveToDatabase(respData, body.payload[i].subscriptionType)
-        }
-      }
-    })
-  }());
+  getFacebookAutoposting(optionsAutoposting)
+  getTwitterAutoposting(optionsAutoposting)
+  getWordpressAutoposting(optionsAutoposting)
+  // (function () {
+  //   optionsAutoposting.url = baseURL + getfacebookauto
+  //   logger.serverLog(TAG, 'Options: ' + JSON.stringify(optionsAutoposting))
+  //   request.post(optionsAutoposting, (error, response, body) => {
+  //     if (error) {
+  //       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
+  //     }
+  //     body = JSON.parse(body)
+  //     logger.serverLog(TAG, 'Inside req for Autoposting Facebook: ' + util.inspect(body))
+  //     logger.serverLog(TAG, `response data:  ${body}`)
+  //     console.log('from accounts', body)
+  //     if (body && body.payload) {
+  //       let respData
+  //       for (let i = 0, length = body.payload.length; i < length; i++) {
+  //         respData = {
+  //           userId: body.payload[i].userId,
+  //           autopostingId: body.payload[i]._id,
+  //           type: body.payload[i].subscriptionType,
+  //           pageId: body.payload[i].subscriptionUrl,
+  //           totalAutopostingSent: body.payload[i].totalAutopostingSent
+  //         }
+  //         saveToDatabase(respData, body.payload[i].subscriptionType)
+  //       }
+  //     }
+  //   })
+  // }());
+  //
+  // // Below code will request for autoposting for twitter autoposting
+  // (function () {
+  //   console.log('below code')
+  //   optionsAutoposting.url = baseURL + gettwitterauto
+  //   request.post(optionsAutoposting, (error, response, body) => {
+  //     if (error) {
+  //       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
+  //     }
+  //     body = JSON.parse(body)
+  //     logger.serverLog(TAG, 'Inside req for Autoposting Twitter: ' + util.inspect(body))
+  //     console.log('in twitter', body)
+  //     if (body && body.payload) {
+  //       logger.serverLog(TAG, `Autoposting data ${JSON.stringify(body)}`)
+  //       let respData
+  //       for (let i = 0, length = body.payload.length; i < length; i++) {
+  //         respData = {
+  //           userId: body.payload[i].userId,
+  //           autopostingId: body.payload[i]._id,
+  //           type: body.payload[i].subscriptionType,
+  //           twitterId: body.payload[i].subscriptionUrl,
+  //           totalAutopostingSent: body.payload[i].totalAutopostingSent
+  //         }
+  //         saveToDatabase(respData, body.payload[i].subscriptionType)
+  //       }
+  //     }
+  //   })
+  // }());
+  //
+  // // Below code will request for autoposting for wordpress autoposting
+  // (function () {
+  //   optionsAutoposting.url = baseURL + getwordpressauto
+  //   request.post(optionsAutoposting, (error, response, body) => {
+  //     if (error) {
+  //       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
+  //     }
+  //     body = JSON.parse(body)
+  //     logger.serverLog(TAG, 'Inside req for Autoposting Wordpress: ' + util.inspect(body))
+  //     if (body && body.payload) {
+  //       let respData
+  //       for (let i = 0, length = body.length; i < length; i++) {
+  //         respData = {
+  //           userId: body.payload[i].userId,
+  //           autopostingId: body.payload[i]._id,
+  //           type: body.payload[i].subscriptionType,
+  //           wordpressId: body.payload[i].subscriptionUrl,
+  //           totalAutopostingSent: body.payload[i].totalAutopostingSent
+  //         }
+  //         saveToDatabase(respData, body.payload[i].subscriptionType)
+  //       }
+  //     }
+  //   })
+  // }())
+}
 
-  // Below code will request for autoposting for twitter autoposting
-  (function () {
-    optionsAutoposting.url = baseURL + gettwitterauto
-    request.post(optionsAutoposting, (error, response, body) => {
-      if (error) {
-        logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
-      }
-      body = JSON.parse(body)
-      logger.serverLog(TAG, 'Inside req for Autoposting Twitter: ' + util.inspect(body))
-      if (body && body.payload) {
-        logger.serverLog(TAG, `Autoposting data ${JSON.stringify(body)}`)
-        let respData
-        for (let i = 0, length = body.payload.length; i < length; i++) {
-          respData = {
-            userId: body.payload[i].userId,
-            autopostingId: body.payload[i]._id,
-            type: body.payload[i].subscriptionType,
-            twitterId: body.payload[i].subscriptionUrl,
-            totalAutopostingSent: body.payload[i].totalAutopostingSent
-          }
-          saveToDatabase(respData, body.payload[i].subscriptionType)
+const getFacebookAutoposting = function (optionsAutoposting) {
+  console.log('in Facebook')
+  optionsAutoposting.url = baseURL + getfacebookauto
+  logger.serverLog(TAG, 'Options: ' + JSON.stringify(optionsAutoposting))
+  request.post(optionsAutoposting, (error, response, body) => {
+    if (error) {
+      logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
+    }
+    body = JSON.parse(body)
+    logger.serverLog(TAG, 'Inside req for Autoposting Facebook: ' + util.inspect(body))
+    logger.serverLog(TAG, `response data:  ${body}`)
+    if (body && body.payload) {
+      let respData
+      for (let i = 0, length = body.payload.length; i < length; i++) {
+        respData = {
+          userId: body.payload[i].userId,
+          autopostingId: body.payload[i]._id,
+          type: body.payload[i].subscriptionType,
+          pageId: body.payload[i].subscriptionUrl,
+          totalAutopostingSent: body.payload[i].totalAutopostingSent
         }
+        saveToDatabase(respData, body.payload[i].subscriptionType)
       }
-    })
-  }());
-
-  // Below code will request for autoposting for wordpress autoposting
-  (function () {
-    optionsAutoposting.url = baseURL + getwordpressauto
-    request.post(optionsAutoposting, (error, response, body) => {
-      if (error) {
-        logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
-      }
-      body = JSON.parse(body)
-      logger.serverLog(TAG, 'Inside req for Autoposting Wordpress: ' + util.inspect(body))
-      if (body && body.payload) {
-        let respData
-        for (let i = 0, length = body.length; i < length; i++) {
-          respData = {
-            userId: body.payload[i].userId,
-            autopostingId: body.payload[i]._id,
-            type: body.payload[i].subscriptionType,
-            wordpressId: body.payload[i].subscriptionUrl,
-            totalAutopostingSent: body.payload[i].totalAutopostingSent
-          }
-          saveToDatabase(respData, body.payload[i].subscriptionType)
+    }
+  })
+}
+const getTwitterAutoposting = function (optionsAutoposting) {
+  console.log('in twitter')
+  optionsAutoposting.url = baseURL + gettwitterauto
+  request.post(optionsAutoposting, (error, response, body) => {
+    if (error) {
+      logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
+    }
+    body = JSON.parse(body)
+    logger.serverLog(TAG, 'Inside req for Autoposting Twitter: ' + util.inspect(body))
+    if (body && body.payload) {
+      logger.serverLog(TAG, `Autoposting data ${JSON.stringify(body)}`)
+      let respData
+      for (let i = 0, length = body.payload.length; i < length; i++) {
+        respData = {
+          userId: body.payload[i].userId,
+          autopostingId: body.payload[i]._id,
+          type: body.payload[i].subscriptionType,
+          twitterId: body.payload[i].subscriptionUrl,
+          totalAutopostingSent: body.payload[i].totalAutopostingSent
         }
+        saveToDatabase(respData, body.payload[i].subscriptionType)
       }
-    })
-  }())
+    }
+  })
+}
+const getWordpressAutoposting = function (optionsAutoposting) {
+  console.log('in wordpress')
+  optionsAutoposting.url = baseURL + getwordpressauto
+  request.post(optionsAutoposting, (error, response, body) => {
+    if (error) {
+      logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
+    }
+    body = JSON.parse(body)
+    logger.serverLog(TAG, 'Inside req for Autoposting Wordpress: ' + util.inspect(body))
+    if (body && body.payload) {
+      let respData
+      for (let i = 0, length = body.length; i < length; i++) {
+        respData = {
+          userId: body.payload[i].userId,
+          autopostingId: body.payload[i]._id,
+          type: body.payload[i].subscriptionType,
+          wordpressId: body.payload[i].subscriptionUrl,
+          totalAutopostingSent: body.payload[i].totalAutopostingSent
+        }
+        saveToDatabase(respData, body.payload[i].subscriptionType)
+      }
+    }
+  })
 }
 
 const saveToDatabase = function (respData, type) {

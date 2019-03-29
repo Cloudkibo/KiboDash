@@ -9,7 +9,7 @@ logger.serverLog(TAG, 'after models')
 const models = require('./../server/db/models')
 // App base URL
 // const baseURL = 'https://staging.kibopush.com/api/kibodash'
-const baseURL = process.env.URL === 'production' ? 'https://saccounts.cloudkibo.com/api/kibodash' : 'http://localhost:3024/api/kibodash'
+const baseURL = process.env.URL === 'production' ? 'https://accounts.cloudkibo.com/api/kibodash' : 'http://localhost:3024/api/kibodash'
 
 // API endpoints
 const getplatformdata = '/getPlatformData'
@@ -22,28 +22,28 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
 // Going to use IIFE pattern to initialize the cron script (Entry point to main functionality)
 (function () {
   // Request for Platform Aggregate data
-  // models.PlatformAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-  //   .then((data) => {
-  //     // We are making a string because request library only supports strings for formData
-  //     let startDate = data[0] &&
-  //                      data[0].dataValues &&
-  //                      data[0].dataValues.createdAt &&
-  //                      data[0].dataValues.createdAt
-  //     if (startDate === undefined) {
-  //       startDate = ''
-  //     }
-  //
-  //     let optionsPlatform = {
-  //       form: {startDate: startDate},
-  //       url: baseURL + getplatformdata
-  //     }
-  //     reqForPlatform(optionsPlatform)
-  //   })
-  //   .catch((err) => {
-  //     if (err) {
-  //       logger.serverLog(TAG, 'Error Platform Date fetching: ' + JSON.stringify(err))
-  //     }
-  //   })
+  models.PlatformAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+    .then((data) => {
+      // We are making a string because request library only supports strings for formData
+      let startDate = data[0] &&
+                       data[0].dataValues &&
+                       data[0].dataValues.createdAt &&
+                       data[0].dataValues.createdAt
+      if (startDate === undefined) {
+        startDate = ''
+      }
+
+      let optionsPlatform = {
+        form: {startDate: startDate},
+        url: baseURL + getplatformdata
+      }
+      reqForPlatform(optionsPlatform)
+    })
+    .catch((err) => {
+      if (err) {
+        logger.serverLog(TAG, 'Error Platform Date fetching: ' + JSON.stringify(err))
+      }
+    })
 
   // Request for Company Aggregate Data
   models.UserAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
@@ -70,53 +70,53 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
     })
 
   // Request for Page Aggregate Data
-  // models.PageAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-  //   .then((data) => {
-  //     // We are making a string because request library only supports strings for formData
-  //     let startDate = data[0] &&
-  //                      data[0].dataValues &&
-  //                      data[0].dataValues.createdAt &&
-  //                      data[0].dataValues.createdAt
-  //     if (startDate === undefined) {
-  //       startDate = ''
-  //     }
-  //
-  //     let optionsPage = {
-  //       form: {startDate: startDate},
-  //       url: baseURL + getpagedata
-  //     }
-  //     reqForPage(optionsPage)
-  //   })
-  //   .catch((err) => {
-  //     if (err) {
-  //       logger.serverLog(TAG, 'Error Page Date fetching:' + JSON.stringify(err))
-  //     }
-  //   })
+  models.PageAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+    .then((data) => {
+      // We are making a string because request library only supports strings for formData
+      let startDate = data[0] &&
+                       data[0].dataValues &&
+                       data[0].dataValues.createdAt &&
+                       data[0].dataValues.createdAt
+      if (startDate === undefined) {
+        startDate = ''
+      }
+
+      let optionsPage = {
+        form: {startDate: startDate},
+        url: baseURL + getpagedata
+      }
+      reqForPage(optionsPage)
+    })
+    .catch((err) => {
+      if (err) {
+        logger.serverLog(TAG, 'Error Page Date fetching:' + JSON.stringify(err))
+      }
+    })
 
   // Request for Autoposting Aggregate Data
-  // models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-  //   .then((data) => {
-  //     // We are making a string because request library only supports strings for formData
-  //     let startDate = data[0] &&
-  //                      data[0].dataValues &&
-  //                      data[0].dataValues.createdAt &&
-  //                      data[0].dataValues.createdAt
-  //     if (startDate === undefined) {
-  //       startDate = ''
-  //     }
-  //     let optionsAutoposting = {
-  //       form: {
-  //         startDate: startDate
-  //       },
-  //       url: baseURL
-  //     }
-  //     reqForAutoposting(optionsAutoposting)
-  //   })
-  //   .catch((err) => {
-  //     if (err) {
-  //       logger.serverLog(TAG, 'Error Autoposting Date fetching:' + JSON.stringify(err))
-  //     }
-  //   })
+  models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+    .then((data) => {
+      // We are making a string because request library only supports strings for formData
+      let startDate = data[0] &&
+                       data[0].dataValues &&
+                       data[0].dataValues.createdAt &&
+                       data[0].dataValues.createdAt
+      if (startDate === undefined) {
+        startDate = ''
+      }
+      let optionsAutoposting = {
+        form: {
+          startDate: startDate
+        },
+        url: baseURL
+      }
+      reqForAutoposting(optionsAutoposting)
+    })
+    .catch((err) => {
+      if (err) {
+        logger.serverLog(TAG, 'Error Autoposting Date fetching:' + JSON.stringify(err))
+      }
+    })
 }())
 
 const reqForPlatform = function (optionsPlatform) {
@@ -181,7 +181,6 @@ const reqForCompany = function (optionsCompany) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
-    console.log('body in company', body)
     logger.serverLog(TAG, 'Inside req for Company: ' + util.inspect(body))
     // Checking if the body is truthy
     if (body && body.payload) {
@@ -203,6 +202,7 @@ const reqForCompany = function (optionsCompany) {
       logger.serverLog(TAG, 'Inside company loop: ' + util.inspect(respData))
 
         models.UserAggregate.create(respData).then(savedData => {
+          console.log('UserAggregate create', savedData)
           logger.serverLog(TAG, 'Successfully Saved: UserAggregate')
           // Going to update total Platform Analytics table
           models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
@@ -231,6 +231,7 @@ const reqForCompany = function (optionsCompany) {
                 totalSurveys: body.payload[i].numberOfSurveys
               }
               models.TotalUserwiseAnalytics.create(analyticsPayload).then(analyticsResult => {
+                console.log('Successfully Saved to user wise analytics', analyticsResult)
                 logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ')
               })
             }
@@ -314,6 +315,7 @@ const reqForPage = function (optionsPage) {
 }
 
 const reqForAutoposting = function (optionsAutoposting) {
+  console.log('Inside req for Autoposting')
   logger.serverLog(TAG, 'Inside req for Autoposting')
   // Below code will request for autoposting for facebook autoposting
   getFacebookAutoposting(optionsAutoposting)

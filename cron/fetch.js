@@ -37,7 +37,7 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
         form: {startDate: startDate},
         url: baseURL + getplatformdata
       }
-      reqForPlatform(optionsPlatform)
+      // reqForPlatform(optionsPlatform)
     })
     .catch((err) => {
       if (err) {
@@ -61,7 +61,7 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
         form: {startDate: startDate},
         url: baseURL + getcompanydata
       }
-      reqForCompany(optionsCompany)
+      // reqForCompany(optionsCompany)
     })
     .catch((err) => {
       if (err) {
@@ -110,7 +110,7 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
         },
         url: baseURL
       }
-      reqForAutoposting(optionsAutoposting)
+      // reqForAutoposting(optionsAutoposting)
     })
     .catch((err) => {
       if (err) {

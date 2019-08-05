@@ -249,7 +249,11 @@ const reqForCompany = function (optionsCompany) {
 }
 
 const reqForPage = function (optionsPage) {
+  console.log('models', models)
   logger.serverLog(TAG, 'Inside req for Page: ')
+  models.PageAggregate.find({}).then(found => {
+    console.log('found Aggregate', found)
+  })
   request.post(optionsPage, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
@@ -299,7 +303,7 @@ const reqForPage = function (optionsPage) {
                 totalSurveys: body.payload[i].numberOfSurveys,
                 pageId: body.payload[i].pageId,
                 pageName: body.payload[i].pageName,
-                pageLikes: body.payload[i].pageLikes
+                pageLikes: 1
               }
               models.TotalPagewiseAnalytics.create(analyticsPayload).then(analyticsResult => {
                 logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')

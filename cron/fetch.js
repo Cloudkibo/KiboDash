@@ -251,7 +251,7 @@ const reqForCompany = function (optionsCompany) {
 const reqForPage = function (optionsPage) {
   console.log('models', models)
   logger.serverLog(TAG, 'Inside req for Page: ')
-  models.PageAggregate.find({}).then(found => {
+  models.PageAggregate.findAll({}).then(found => {
     console.log('found Aggregate', found)
   })
   request.post(optionsPage, (error, response, body) => {

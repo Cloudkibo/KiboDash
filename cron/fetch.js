@@ -255,13 +255,14 @@ const reqForPage = function (optionsPage) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
-    logger.serverLog(TAG, 'Inside req for Page: ' + util.inspect(body))
     // Checking if the body is truthy
     if (body && body.payload) {
       logger.serverLog(TAG, 'Inside req for Page in if ')
       let respData, updatePayload, analyticsPayload
       for (let i = 0, length = body.payload.length; i < length; i++) {
-        console.log('value of i', i)
+        if (i === 2868 || i === 2869) {
+          console.log('payload at i', body.payload[i])
+        }
         respData = {
           totalSubscribers: body.payload[i].numberOfSubscribers,
           totalBroadcasts: body.payload[i].numberOfBroadcasts,

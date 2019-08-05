@@ -259,7 +259,6 @@ const reqForPage = function (optionsPage) {
     // Checking if the body is truthy
     if (body && body.payload) {
       logger.serverLog(TAG, 'Inside req for Page in if ')
-      logger.serverLog(TAG, `Model ${util.inspect(models)}`)
       let respData, updatePayload, analyticsPayload
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {

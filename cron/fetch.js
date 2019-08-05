@@ -261,6 +261,7 @@ const reqForPage = function (optionsPage) {
       logger.serverLog(TAG, 'Inside req for Page in if ')
       let respData, updatePayload, analyticsPayload
       for (let i = 0, length = body.payload.length; i < length; i++) {
+        console.log('value of i', i)
         respData = {
           totalSubscribers: body.payload[i].numberOfSubscribers,
           totalBroadcasts: body.payload[i].numberOfBroadcasts,

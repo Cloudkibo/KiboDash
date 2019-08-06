@@ -249,7 +249,6 @@ const reqForCompany = function (optionsCompany) {
 }
 
 const reqForPage = function (optionsPage) {
-  console.log('models', models)
   logger.serverLog(TAG, 'Inside req for Page: ')
   request.post(optionsPage, (error, response, body) => {
     if (error) {
@@ -271,10 +270,10 @@ const reqForPage = function (optionsPage) {
           pageLikes: body.payload[i].likes
         }
         console.log('going to create', i)
-        // models.PageAggregate.create(respData).then(savedData => {
-        //   console.log('saved PageAggregate')
-        //   logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
-        //   // Going to update total Platform Analytics table
+        models.PageAggregate.create(respData).then(savedData => {
+          console.log('saved PageAggregate')
+          logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
+          // Going to update total Platform Analytics table
           models.TotalPagewiseAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
             console.log('found TotalPagewiseAnalytics')
             if (result) {
@@ -308,11 +307,11 @@ const reqForPage = function (optionsPage) {
               console.log('error at TotalPagewiseAnalytics', error)
               logger.serverLog(TAG, 'Error While update page wise analytics: ' + JSON.stringify(error))
             })
-        // })
-        //   .catch(error => {
-        //     console.log('error at page sabving', error)
-        //     logger.serverLog(TAG, 'Error while saving page data to DB: ' + JSON.stringify(error))
-        //   })
+        })
+          .catch(error => {
+            console.log('error at page sabving', error)
+            logger.serverLog(TAG, 'Error while saving page data to DB: ' + JSON.stringify(error))
+          })
       }
     }
   })

@@ -73,14 +73,14 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
   models.PagesUpdated.findAll({})
     .then((data) => {
       // We are making a string because request library only supports strings for formData
-      let startDate = data[0] &&
-                       data[0].dataValues &&
-                       data[0].dataValues.updatedAt &&
-                       data[0].dataValues.updatedAt
-      if (startDate === undefined) {
-        startDate = ''
-      }
-
+      // let startDate = data[0] &&
+      //                  data[0].dataValues &&
+      //                  data[0].dataValues.updatedAt &&
+      //                  data[0].dataValues.updatedAt
+      // if (startDate === undefined) {
+      //   startDate = ''
+      // }
+      let startDate = ''
       let optionsPage = {
         form: {startDate: startDate},
         url: baseURL + getpagedata

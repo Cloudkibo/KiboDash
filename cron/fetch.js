@@ -22,61 +22,61 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
 // Going to use IIFE pattern to initialize the cron script (Entry point to main functionality)
 (function () {
   // Request for Platform Aggregate data
-  models.PlatformAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-    .then((data) => {
-      // We are making a string because request library only supports strings for formData
-      let startDate = data[0] &&
-                       data[0].dataValues &&
-                       data[0].dataValues.createdAt &&
-                       data[0].dataValues.createdAt
-      if (startDate === undefined) {
-        startDate = ''
-      }
-
-      let optionsPlatform = {
-        form: {startDate: startDate},
-        url: baseURL + getplatformdata
-      }
-      // reqForPlatform(optionsPlatform)
-    })
-    .catch((err) => {
-      if (err) {
-        logger.serverLog(TAG, 'Error Platform Date fetching: ' + JSON.stringify(err))
-      }
-    })
-
-  // Request for Company Aggregate Data
-  models.UserAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-    .then((data) => {
-      // We are making a string because request library only supports strings for formData
-      let startDate = data[0] &&
-                       data[0].dataValues &&
-                       data[0].dataValues.createdAt &&
-                       data[0].dataValues.createdAt
-      if (startDate === undefined) {
-        startDate = ''
-      }
-
-      let optionsCompany = {
-        form: {startDate: startDate},
-        url: baseURL + getcompanydata
-      }
-      // reqForCompany(optionsCompany)
-    })
-    .catch((err) => {
-      if (err) {
-        logger.serverLog(TAG, 'Error User Date fetching:' + JSON.stringify(err))
-      }
-    })
+  // models.PlatformAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+  //   .then((data) => {
+  //     // We are making a string because request library only supports strings for formData
+  //     let startDate = data[0] &&
+  //                      data[0].dataValues &&
+  //                      data[0].dataValues.createdAt &&
+  //                      data[0].dataValues.createdAt
+  //     if (startDate === undefined) {
+  //       startDate = ''
+  //     }
+  //
+  //     let optionsPlatform = {
+  //       form: {startDate: startDate},
+  //       url: baseURL + getplatformdata
+  //     }
+  //     // reqForPlatform(optionsPlatform)
+  //   })
+  //   .catch((err) => {
+  //     if (err) {
+  //       logger.serverLog(TAG, 'Error Platform Date fetching: ' + JSON.stringify(err))
+  //     }
+  //   })
+  //
+  // // Request for Company Aggregate Data
+  // models.UserAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+  //   .then((data) => {
+  //     // We are making a string because request library only supports strings for formData
+  //     let startDate = data[0] &&
+  //                      data[0].dataValues &&
+  //                      data[0].dataValues.createdAt &&
+  //                      data[0].dataValues.createdAt
+  //     if (startDate === undefined) {
+  //       startDate = ''
+  //     }
+  //
+  //     let optionsCompany = {
+  //       form: {startDate: startDate},
+  //       url: baseURL + getcompanydata
+  //     }
+  //     // reqForCompany(optionsCompany)
+  //   })
+  //   .catch((err) => {
+  //     if (err) {
+  //       logger.serverLog(TAG, 'Error User Date fetching:' + JSON.stringify(err))
+  //     }
+  //   })
 
   // Request for Page Aggregate Data
-  models.PageAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+  models.PagesUpdated.findAll({})
     .then((data) => {
       // We are making a string because request library only supports strings for formData
       let startDate = data[0] &&
                        data[0].dataValues &&
-                       data[0].dataValues.createdAt &&
-                       data[0].dataValues.createdAt
+                       data[0].dataValues.updatedAt &&
+                       data[0].dataValues.updatedAt
       if (startDate === undefined) {
         startDate = ''
       }
@@ -94,29 +94,29 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
     })
 
   // Request for Autoposting Aggregate Data
-  models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
-    .then((data) => {
-      // We are making a string because request library only supports strings for formData
-      let startDate = data[0] &&
-                       data[0].dataValues &&
-                       data[0].dataValues.createdAt &&
-                       data[0].dataValues.createdAt
-      if (startDate === undefined) {
-        startDate = ''
-      }
-      let optionsAutoposting = {
-        form: {
-          startDate: startDate
-        },
-        url: baseURL
-      }
-      // reqForAutoposting(optionsAutoposting)
-    })
-    .catch((err) => {
-      if (err) {
-        logger.serverLog(TAG, 'Error Autoposting Date fetching:' + JSON.stringify(err))
-      }
-    })
+  // models.AutopostingAggregate.findAll({order: [['createdAt', 'DESC']], limit: 1})
+  //   .then((data) => {
+  //     // We are making a string because request library only supports strings for formData
+  //     let startDate = data[0] &&
+  //                      data[0].dataValues &&
+  //                      data[0].dataValues.createdAt &&
+  //                      data[0].dataValues.createdAt
+  //     if (startDate === undefined) {
+  //       startDate = ''
+  //     }
+  //     let optionsAutoposting = {
+  //       form: {
+  //         startDate: startDate
+  //       },
+  //       url: baseURL
+  //     }
+  //     // reqForAutoposting(optionsAutoposting)
+  //   })
+  //   .catch((err) => {
+  //     if (err) {
+  //       logger.serverLog(TAG, 'Error Autoposting Date fetching:' + JSON.stringify(err))
+  //     }
+  //   })
 }())
 
 const reqForPlatform = function (optionsPlatform) {
@@ -256,9 +256,26 @@ const reqForPage = function (optionsPage) {
     }
     body = JSON.parse(body)
     // Checking if the body is truthy
-    if (body && body.payload) {
-      logger.serverLog(TAG, 'Inside req for Page in if ')
+    if (body && body.payload && body.payload.length > 0) {
       let respData, updatePayload, analyticsPayload
+      models.PagesUpdated.findOne({}).then(result => {
+        if (result) {
+          updatePayload = {
+            updateId: result.dataValues.updateId + 1
+          }
+          result.updateAttributes(updatePayload).then(result2 => {
+            logger.serverLog(TAG, 'Successfully updated PagesUpdatedTable ')
+          })
+        } else {
+          updatedPayload = {
+            updateId: 1
+          }
+          models.PagesUpdated.create(updatedPayload).then(pagesUpdatedResult => {
+            logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
+          })
+        }
+      })
+      logger.serverLog(TAG, 'Inside req for Page in if ')
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
           totalSubscribers: body.payload[i].numberOfSubscribers,
@@ -269,13 +286,11 @@ const reqForPage = function (optionsPage) {
           pageName: body.payload[i].pageName,
           pageLikes: body.payload[i].likes
         }
-        console.log('going to create', i)
-        models.PageAggregate.create(respData).then(savedData => {
-          console.log('saved PageAggregate')
-          logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
+        // models.PageAggregate.create(respData).then(savedData => {
+        //   console.log('saved PageAggregate')
+        //   logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table
-          models.TotalPagewiseAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
-            console.log('found TotalPagewiseAnalytics')
+          models.TotalPageAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
             if (result) {
               updatePayload = {
                 totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
@@ -285,6 +300,7 @@ const reqForPage = function (optionsPage) {
                 pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
               }
               result.updateAttributes(updatePayload).then(result2 => {
+                console.log('Successfully updated')
                 logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
               })
             } else {
@@ -298,20 +314,19 @@ const reqForPage = function (optionsPage) {
                 pageName: body.payload[i].pageName,
                 pageLikes: 1
               }
-              models.TotalPagewiseAnalytics.create(analyticsPayload).then(analyticsResult => {
+              models.TotalPageAnalytics.create(analyticsPayload).then(analyticsResult => {
                 logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
               })
             }
           })
             .catch(error => {
-              console.log('error at TotalPagewiseAnalytics', error)
               logger.serverLog(TAG, 'Error While update page wise analytics: ' + JSON.stringify(error))
             })
-        })
-          .catch(error => {
-            console.log('error at page sabving', error)
-            logger.serverLog(TAG, 'Error while saving page data to DB: ' + JSON.stringify(error))
-          })
+        // })
+        //   .catch(error => {
+        //     console.log('error at page sabving', error)
+        //     logger.serverLog(TAG, 'Error while saving page data to DB: ' + JSON.stringify(error))
+        //   })
       }
     }
   })

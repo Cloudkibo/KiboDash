@@ -258,23 +258,23 @@ const reqForPage = function (optionsPage) {
     // Checking if the body is truthy
     if (body && body.payload && body.payload.length > 0) {
       let respData, updatePayload, analyticsPayload
-      models.PagesUpdated.findOne({}).then(result => {
-        if (result) {
-          updatePayload = {
-            updateId: result.dataValues.updateId + 1
-          }
-          result.updateAttributes(updatePayload).then(result2 => {
-            logger.serverLog(TAG, 'Successfully updated PagesUpdatedTable ')
-          })
-        } else {
-          updatedPayload = {
-            updateId: 1
-          }
-          models.PagesUpdated.create(updatedPayload).then(pagesUpdatedResult => {
-            logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
-          })
-        }
-      })
+      // models.PagesUpdated.findOne({}).then(result => {
+      //   if (result) {
+      //     updatePayload = {
+      //       updateId: result.dataValues.updateId + 1
+      //     }
+      //     result.updateAttributes(updatePayload).then(result2 => {
+      //       logger.serverLog(TAG, 'Successfully updated PagesUpdatedTable ')
+      //     })
+      //   } else {
+      //     updatedPayload = {
+      //       updateId: 1
+      //     }
+      //     models.PagesUpdated.create(updatedPayload).then(pagesUpdatedResult => {
+      //       logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
+      //     })
+      //   }
+      // })
       logger.serverLog(TAG, 'Inside req for Page in if ')
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
@@ -286,42 +286,44 @@ const reqForPage = function (optionsPage) {
           pageName: body.payload[i].pageName,
           pageLikes: body.payload[i].likes
         }
+        console.log('body.payload[i]', body.payload[i])
         // models.PageAggregate.create(respData).then(savedData => {
         //   console.log('saved PageAggregate')
         //   logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table
-          models.TotalPageAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
-            if (result) {
-              updatePayload = {
-                totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
-                totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
-                totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
-                totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys,
-                pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
-              }
-              result.updateAttributes(updatePayload).then(result2 => {
-                console.log('Successfully updated')
-                logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
-              })
-            } else {
-              // This means that this is the first entry for Total Userwise Analytics
-              analyticsPayload = {
-                totalSubscribers: body.payload[i].numberOfSubscribers,
-                totalBroadcasts: body.payload[i].numberOfBroadcasts,
-                totalPolls: body.payload[i].numberOfPolls,
-                totalSurveys: body.payload[i].numberOfSurveys,
-                pageId: body.payload[i].pageId,
-                pageName: body.payload[i].pageName,
-                pageLikes: 1
-              }
-              models.TotalPageAnalytics.create(analyticsPayload).then(analyticsResult => {
-                logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
-              })
-            }
-          })
-            .catch(error => {
-              logger.serverLog(TAG, 'Error While update page wise analytics: ' + JSON.stringify(error))
-            })
+          // models.TotalPageAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
+          //   if (result) {
+          //     updatePayload = {
+          //       totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
+          //       totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
+          //       totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
+          //       totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys,
+          //       pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
+          //     }
+          //     result.updateAttributes(updatePayload).then(result2 => {
+          //       console.log('Successfully updated')
+          //       logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
+          //     })
+          //   } else {
+          //     // This means that this is the first entry for Total Userwise Analytics
+          //     analyticsPayload = {
+          //       totalSubscribers: body.payload[i].numberOfSubscribers,
+          //       totalBroadcasts: body.payload[i].numberOfBroadcasts,
+          //       totalPolls: body.payload[i].numberOfPolls,
+          //       totalSurveys: body.payload[i].numberOfSurveys,
+          //       pageId: body.payload[i].pageId,
+          //       pageName: body.payload[i].pageName,
+          //       pageLikes: 1
+          //     }
+          //     models.TotalPageAnalytics.create(analyticsPayload).then(analyticsResult => {
+          //       logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')
+          //     })
+          //   }
+          // })
+          //   .catch(error => {
+          //     console.log('error while updating pageanalytics', error)
+          //     logger.serverLog(TAG, 'Error While update page wise analytics: ' + JSON.stringify(error))
+          //   })
         // })
         //   .catch(error => {
         //     console.log('error at page sabving', error)

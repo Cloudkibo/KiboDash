@@ -73,13 +73,14 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
   models.PagesUpdated.findAll({})
     .then((data) => {
       // We are making a string because request library only supports strings for formData
-      let startDate = data[0] &&
-                       data[0].dataValues &&
-                       data[0].dataValues.updatedAt &&
-                       data[0].dataValues.updatedAt
-      if (startDate === undefined) {
-        startDate = ''
-      }
+      // let startDate = data[0] &&
+      //                  data[0].dataValues &&
+      //                  data[0].dataValues.updatedAt &&
+      //                  data[0].dataValues.updatedAt
+      // if (startDate === undefined) {
+      //   startDate = ''
+      // }
+      let startDate = ''
       let optionsPage = {
         form: {startDate: startDate},
         url: baseURL + getpagedata
@@ -290,7 +291,7 @@ const reqForPage = function (optionsPage) {
         //   console.log('saved PageAggregate')
         //   logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table
-          models.TotalPageAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
+          models.TotalPageAnalytics.findOne({where: {page_id: body.payload[i]._id}}).then(result => {
             if (result) {
               updatePayload = {
                 totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
@@ -312,7 +313,8 @@ const reqForPage = function (optionsPage) {
                 totalSurveys: body.payload[i].numberOfSurveys,
                 pageId: body.payload[i].pageId,
                 pageName: body.payload[i].pageName,
-                pageLikes: 1
+                pageLikes: 1,
+                page_id: body.payload[i]._id
               }
               models.TotalPageAnalytics.create(analyticsPayload).then(analyticsResult => {
                 logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')

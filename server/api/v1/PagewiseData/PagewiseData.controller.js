@@ -24,7 +24,7 @@ exports.topPages = function (req, res) {
       .json({status: 'failed', description: 'Parameters are missing'})
   }
 
-  models.TotalPagewiseAnalytics.findAll({order: [['totalSubscribers', 'DESC']], limit: req.body.limit}).then((data) => {
+  models.TotalPageAnalytics.findAll({order: [['totalSubscribers', 'DESC']], limit: req.body.limit}).then((data) => {
     res.status(200).json({ status: 'success', payload: data })
   })
     .catch((err) => {

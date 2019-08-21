@@ -108,8 +108,15 @@ exports.OnePageAggregateDatewise = function (req, res) {
 }
 exports.updatePage = function (req, res) {
 
-  models.TotalPageAnalytics.findOne({where: {pageId: '556498344477520'}}).then((data) => {
-    res.status(200).json({ status: 'success', payload: data })
+  models.TotalPageAnalytics.findOne({where: {pageId: '556498344477520'}}).then((result) => {
+    if (result) {
+      let updatePayload = {
+        totalSubscribers: 3685
+      }
+      result.updateAttributes(updatePayload).then(result2 => {
+        logger.serverLog(TAG, 'Successfully update Total Userwise Analytics: ')
+        res.status(200).json({ status: 'success', payload: result2 })
+      })
   })
     .catch((err) => {
       res.status(500).json({ status: 'failed', payload: err })

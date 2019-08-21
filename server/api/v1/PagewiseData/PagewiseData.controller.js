@@ -108,7 +108,7 @@ exports.OnePageAggregateDatewise = function (req, res) {
 }
 exports.updatePage = function (req, res) {
 
-  models.TotalPageAnalytics.findAll({pageId: '556498344477520'}).then((data) => {
+  models.TotalPageAnalytics.findOne({where: {pageId: '556498344477520'}}).then((data) => {
     res.status(200).json({ status: 'success', payload: data })
   })
     .catch((err) => {

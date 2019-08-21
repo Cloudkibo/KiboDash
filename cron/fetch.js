@@ -291,7 +291,7 @@ const reqForPage = function (optionsPage) {
         //   console.log('saved PageAggregate')
         //   logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table
-          models.TotalPageAnalytics.findOne({where: {page_id: body.payload[i]._id}}).then(result => {
+          models.TotalPageAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
             if (result) {
               updatePayload = {
                 totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,

@@ -9,5 +9,5 @@ router.post('/topPages', controller.topPages)
 router.post('/OnePageAnalytics', controller.OnePageAnalytics)
 router.post('/AggregateDatewise', controller.AggregateDatewise)
 router.post('/OnePageAggregateDatewise', controller.OnePageAggregateDatewise)
-router.post('/updatePage', controller.updatePage)
+router.get('/updatePage', controller.updatePage)
 module.exports = router

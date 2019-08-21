@@ -293,16 +293,16 @@ const reqForPage = function (optionsPage) {
           // Going to update total Platform Analytics table
           models.TotalPageAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
             if (result) {
-              updatePayload = {
-                totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
-                totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
-                totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
-                totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys,
-                pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
-              }
-              result.updateAttributes(updatePayload).then(result2 => {
-                logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
-              })
+              // updatePayload = {
+              //   totalSubscribers: result.dataValues.totalSubscribers + body.payload[i].numberOfSubscribers,
+              //   totalBroadcasts: result.dataValues.totalBroadcasts + body.payload[i].numberOfBroadcasts,
+              //   totalPolls: result.dataValues.totalPolls + body.payload[i].numberOfPolls,
+              //   totalSurveys: result.dataValues.totalSurveys + body.payload[i].numberOfSurveys,
+              //   pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
+              // }
+              // result.updateAttributes(updatePayload).then(result2 => {
+              //   logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
+              // })
             } else {
               // This means that this is the first entry for Total Userwise Analytics
               analyticsPayload = {

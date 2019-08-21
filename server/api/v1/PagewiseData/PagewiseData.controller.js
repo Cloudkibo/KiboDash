@@ -117,6 +117,7 @@ exports.updatePage = function (req, res) {
         logger.serverLog(TAG, 'Successfully update Total Userwise Analytics: ')
         res.status(200).json({ status: 'success', payload: result2 })
       })
+    }
   })
     .catch((err) => {
       res.status(500).json({ status: 'failed', payload: err })

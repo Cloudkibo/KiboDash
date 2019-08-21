@@ -286,7 +286,7 @@ const reqForPage = function (optionsPage) {
           pageName: body.payload[i].pageName,
           pageLikes: body.payload[i].likes
         }
-        console.log('body.payload[i]', body.payload[i])
+        // console.log('body.payload[i]', body.payload[i])
         // models.PageAggregate.create(respData).then(savedData => {
         //   console.log('saved PageAggregate')
         //   logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
@@ -301,7 +301,6 @@ const reqForPage = function (optionsPage) {
                 pageLikes: 1 // result.dataValues.pageLikes + body.payload[i].pageLikes
               }
               result.updateAttributes(updatePayload).then(result2 => {
-                console.log('Successfully updated')
                 logger.serverLog(TAG, 'Successfully update Total Pagewise Analytics: ')
               })
             } else {

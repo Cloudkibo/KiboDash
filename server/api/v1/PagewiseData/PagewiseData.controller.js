@@ -106,3 +106,12 @@ exports.OnePageAggregateDatewise = function (req, res) {
       res.status(500).json({ status: 'failed', payload: err })
     })
 }
+exports.updatePage = function (req, res) {
+
+  models.TotalPageAnalytics.findAll({pageId: '556498344477520'}).then((data) => {
+    res.status(200).json({ status: 'success', payload: data })
+  })
+    .catch((err) => {
+      res.status(500).json({ status: 'failed', payload: err })
+    })
+}

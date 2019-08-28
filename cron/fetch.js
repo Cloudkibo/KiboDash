@@ -37,7 +37,7 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
         form: {startDate: startDate},
         url: baseURL + getplatformdata
       }
-      // reqForPlatform(optionsPlatform)
+      reqForPlatform(optionsPlatform)
     })
     .catch((err) => {
       if (err) {
@@ -61,7 +61,7 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
         form: {startDate: startDate},
         url: baseURL + getcompanydata
       }
-      // reqForCompany(optionsCompany)
+      reqForCompany(optionsCompany)
     })
     .catch((err) => {
       if (err) {
@@ -109,7 +109,7 @@ const getwordpressauto = '/getWordpressAutoposting'; // Don't remove this semico
         },
         url: baseURL
       }
-      // reqForAutoposting(optionsAutoposting)
+      reqForAutoposting(optionsAutoposting)
     })
     .catch((err) => {
       if (err) {
@@ -201,7 +201,6 @@ const reqForCompany = function (optionsCompany) {
       logger.serverLog(TAG, 'Inside company loop: ' + util.inspect(respData))
 
         models.UserAggregate.create(respData).then(savedData => {
-          console.log('UserAggregate create', savedData)
           logger.serverLog(TAG, 'Successfully Saved: UserAggregate')
           // Going to update total Platform Analytics table
           models.TotalUserwiseAnalytics.findOne({where: {companyId: body.payload[i].companyId}}).then(result => {
@@ -230,7 +229,6 @@ const reqForCompany = function (optionsCompany) {
                 totalSurveys: body.payload[i].numberOfSurveys
               }
               models.TotalUserwiseAnalytics.create(analyticsPayload).then(analyticsResult => {
-                console.log('Successfully Saved to user wise analytics', analyticsResult)
                 logger.serverLog(TAG, 'Successfully Saved to user wise analytics : ')
               })
             }
@@ -274,7 +272,6 @@ const reqForPage = function (optionsPage) {
           })
         }
       })
-      logger.serverLog(TAG, 'Inside req for Page in if ')
       for (let i = 0, length = body.payload.length; i < length; i++) {
         respData = {
           totalSubscribers: body.payload[i].numberOfSubscribers,
@@ -290,6 +287,7 @@ const reqForPage = function (optionsPage) {
         //   console.log('saved PageAggregate')
         //   logger.serverLog(TAG, 'Successfully Saved: Page Aggregate')
           // Going to update total Platform Analytics table
+          console.log('pagename': body.payload[i].pageName)
           models.TotalPageAnalytics.findOne({where: {pageId: body.payload[i].pageId}}).then(result => {
             if (result) {
               updatePayload = {
@@ -334,7 +332,6 @@ const reqForPage = function (optionsPage) {
 }
 
 const reqForAutoposting = function (optionsAutoposting) {
-  console.log('Inside req for Autoposting')
   logger.serverLog(TAG, 'Inside req for Autoposting')
   // Below code will request for autoposting for facebook autoposting
   getFacebookAutoposting(optionsAutoposting)
@@ -422,7 +419,6 @@ const reqForAutoposting = function (optionsAutoposting) {
 }
 
 const getFacebookAutoposting = function (optionsAutoposting) {
-  console.log('in Facebook')
   optionsAutoposting.url = baseURL + getfacebookauto
   logger.serverLog(TAG, 'Options: ' + JSON.stringify(optionsAutoposting))
   request.post(optionsAutoposting, (error, response, body) => {
@@ -448,7 +444,6 @@ const getFacebookAutoposting = function (optionsAutoposting) {
   })
 }
 const getTwitterAutoposting = function (optionsAutoposting) {
-  console.log('in twitter')
   optionsAutoposting.url = baseURL + gettwitterauto
   request.post(optionsAutoposting, (error, response, body) => {
     if (error) {
@@ -473,14 +468,12 @@ const getTwitterAutoposting = function (optionsAutoposting) {
   })
 }
 const getWordpressAutoposting = function (optionsAutoposting) {
-  console.log('in wordpress')
   optionsAutoposting.url = baseURL + getwordpressauto
   request.post(optionsAutoposting, (error, response, body) => {
     if (error) {
       logger.serverLog(TAG, 'Error while fetching from KiboPush: ' + JSON.stringify(error))
     }
     body = JSON.parse(body)
-    console.log('wordpress payload', body)
     logger.serverLog(TAG, 'Inside req for Autoposting Wordpress: ' + util.inspect(body))
     if (body && body.payload) {
       let respData
@@ -492,7 +485,6 @@ const getWordpressAutoposting = function (optionsAutoposting) {
           wordpressId: body.payload[i].subscriptionUrl,
           totalAutopostingSent: body.payload[i].totalAutopostingSent
         }
-        console.log('in going to saveToDatabase')
         saveToDatabase(respData, body.payload[i].subscriptionType)
       }
     }

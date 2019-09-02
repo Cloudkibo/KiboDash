@@ -111,7 +111,7 @@ exports.updatePage = function (req, res) {
   models.TotalPageAnalytics.findOne({where: {pageId: '556498344477520'}}).then((result) => {
     if (result) {
       let updatePayload = {
-        totalSubscribers: 3685
+        totalSubscribers: 3705
       }
       result.updateAttributes(updatePayload).then(result2 => {
         logger.serverLog(TAG, 'Successfully update Total Userwise Analytics: ')

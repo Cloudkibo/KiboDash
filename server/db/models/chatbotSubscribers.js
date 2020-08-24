@@ -5,10 +5,10 @@ module.exports = (sequelize, DataTypes) => {
     companyId: DataTypes.STRING,
     subscriberId: DataTypes.STRING,
     subscriberName: DataTypes.STRING,
-    time: DateTypes.STRING,
+    time: DataTypes.STRING,
     messageBlockId: DataTypes.STRING,
     messageBlockTitle: DataTypes.STRING,
-    blocksPath: DateTypes.STRING
+    blocksPath: DataTypes.STRING
   }, {})
   ChatbotSubscribersAnalytics.associate = function (models) {
     // associations can be defined here

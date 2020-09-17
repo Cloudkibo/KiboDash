@@ -9,6 +9,8 @@ module.exports = function (app) {
   app.use('/api/v1/PlatformwiseData', require('./api/v1/PlatformwiseData'))
   app.use('/api/v1/AutopostingData', require('./api/v1/Autoposting'))
   app.use('/api/v1/chatbotSubscribers', require('./api/v1/chatbotSubscribers'))
+  app.use('/api/v1/chatbot', require('./api/v1/chatbot'))
+  app.use('/api/v1/chatbotBlock', require('./api/v1/chatbotBlock'))
 
   app.route('/:url(api|auth)/*').get((req, res) => {
     res.status(404).send({url: `${req.originalUrl} not found`})

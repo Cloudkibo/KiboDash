@@ -14,8 +14,8 @@
     "debug": "cross-env DEBUG=express:router:route,express:application,kibopush:* NODE_ENV=development nodemon --trace-sync-io server/app.js",
     "lint": "echo 'Pre-commit checks...' && standard --fix && echo \"No code style errors found.\"",
     "start": "cross-env DEBUG=kibodash:* DOMAIN=localhost nodemon server/app.js --trace-warnings",
-    "start:dayem": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost PORT=5050 nodemon server/app.js",
-    "start:asad": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost node mytests/test.js"
+    "start:imran": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost PORT=5050 nodemon server/app.js",
+    "start:anisha": "cross-env DEBUG=kibodash:* NODE_ENV=development DOMAIN=localhost node mytests/test.js"
   },
   "pre-commit": [
     "lint",
@@ -36,10 +36,12 @@
   },
   "homepage": "https://github.com/Cloudkibo/KiboDash#readme",
   "dependencies": {
+    "composable-middleware": "^0.3.0",
     "compression": "^1.7.3",
     "debug": "^2.6.8",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+    "express-jsonschema": "^1.1.6",
     "helmet": "^3.13.0",
     "lodash": "^4.17.10",
     "method-override": "^3.0.0",

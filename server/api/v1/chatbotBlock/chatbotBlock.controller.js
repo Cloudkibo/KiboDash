@@ -30,8 +30,8 @@ exports.create = function (req, res) {
 
 exports.update = function (req, res) {
   logger.serverLog(TAG, 'Hit the update chatbot endpoint')
-  const query = req.body.query
-  const updated = { where: req.body.updated }
+  const query = {where: req.body.query}
+  const updated = req.body.updated
   models.ChatbotBlock.update(updated, query)
     .then(savedData => {
       res.status(200).json({ status: 'success', payload: savedData })

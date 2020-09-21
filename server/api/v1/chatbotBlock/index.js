@@ -22,7 +22,6 @@ router.put('/',
 
 router.delete('/',
   auth.isAuthenticated(),
-  validate({ body: validationSchema.chatbotBlockObject }),
   controller.delete)
 
 module.exports = router

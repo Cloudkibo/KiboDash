@@ -6,10 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     companyId: DataTypes.STRING,
     userId: DataTypes.STRING,
-    triggers: DataTypes.STRING,
+    triggers: DataTypes.ARRAY(DataTypes.STRING),
     uniqueId: DataTypes.STRING,
-    payload: DataTypes.STRING,
-    options: DataTypes.STRING
+    payload: DataTypes.ARRAY(DataTypes.JSONB),
+    options: DataTypes.ARRAY(DataTypes.JSONB)
   }, {})
 
   ChatbotBlock.associate = function (models) {

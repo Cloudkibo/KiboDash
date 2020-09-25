@@ -14,16 +14,16 @@ exports.createPayload = {
       'type': 'string'
     },
     'triggers': {
-      'type': 'string'
+      'type': 'array'
     },
     'uniqueId': {
       'type': 'string'
     },
     'payload': {
-      'type': 'string'
+      'type': 'array'
     },
     'options': {
-      'type': 'string'
+      'type': 'array'
     }
   },
   'required': [
@@ -55,16 +55,16 @@ exports.updatePayload = {
           'type': 'string'
         },
         'triggers': {
-          'type': 'string'
+          'type': 'array'
         },
         'uniqueId': {
           'type': 'string'
         },
         'payload': {
-          'type': 'string'
+          'type': 'array'
         },
         'options': {
-          'type': 'string'
+          'type': 'array'
         }
       }
     },
@@ -84,16 +84,16 @@ exports.updatePayload = {
           'type': 'string'
         },
         'triggers': {
-          'type': 'string'
+          'type': 'array'
         },
         'uniqueId': {
           'type': 'string'
         },
         'payload': {
-          'type': 'string'
+          'type': 'array'
         },
         'options': {
-          'type': 'string'
+          'type': 'array'
         }
       }
     }
@@ -120,16 +120,16 @@ exports.chatbotBlockObject = {
       'type': 'string'
     },
     'triggers': {
-      'type': 'string'
+      'type': 'array'
     },
     'uniqueId': {
       'type': 'string'
     },
     'payload': {
-      'type': 'string'
+      'type': 'array'
     },
     'options': {
-      'type': 'string'
+      'type': 'array'
     }
   }
 }

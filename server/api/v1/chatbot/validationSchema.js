@@ -4,6 +4,9 @@ exports.createPayload = {
     'chatbotId': {
       'type': 'string'
     },
+    'platform': {
+      'type': 'string'
+    },
     'title': {
       'type': 'string'
     },
@@ -22,6 +25,7 @@ exports.createPayload = {
   },
   'required': [
     'chatbotId',
+    'platform',
     'title',
     'companyId',
     'userId',
@@ -36,6 +40,9 @@ exports.updatePayload = {
       'type': 'object',
       'properties': {
         'chatbotId': {
+          'type': 'string'
+        },
+        'platform': {
           'type': 'string'
         },
         'title': {
@@ -59,6 +66,9 @@ exports.updatePayload = {
       'type': 'object',
       'properties': {
         'chatbotId': {
+          'type': 'string'
+        },
+        'platform': {
           'type': 'string'
         },
         'title': {
@@ -89,6 +99,9 @@ exports.chatbotObject = {
   'type': 'object',
   'properties': {
     'chatbotId': {
+      'type': 'string'
+    },
+    'platform': {
       'type': 'string'
     },
     'title': {

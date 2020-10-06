@@ -3,6 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
   let Chatbot = sequelize.define('Chatbot', {
     chatbotId: DataTypes.STRING,
+    platform: DataTypes.STRING,
     title: DataTypes.STRING,
     companyId: DataTypes.STRING,
     userId: DataTypes.STRING,

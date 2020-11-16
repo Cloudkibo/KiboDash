@@ -258,14 +258,16 @@ const reqForPage = function (optionsPage) {
       models.PagesUpdated.findOne({}).then(result => {
         if (result) {
           updatePayload = {
-            updateId: result.dataValues.updateId + 1
+            updateId: result.dataValues.updateId + 1,
+            updatedAt: new Date()
           }
           result.updateAttributes(updatePayload).then(result2 => {
             logger.serverLog(TAG, 'Successfully updated PagesUpdatedTable ')
           })
         } else {
           updatedPayload = {
-            updateId: 1
+            updateId: 1,
+            updatedAt: new Date()
           }
           models.PagesUpdated.create(updatedPayload).then(pagesUpdatedResult => {
             logger.serverLog(TAG, 'Successfully Saved to page wise analytics : ')

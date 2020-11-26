@@ -11,6 +11,7 @@ module.exports = function (app) {
   app.use('/api/v1/chatbotSubscribers', require('./api/v1/chatbotSubscribers'))
   app.use('/api/v1/chatbot', require('./api/v1/chatbot'))
   app.use('/api/v1/chatbotBlock', require('./api/v1/chatbotBlock'))
+  app.use('/api/v1/slaDashboard', require('./api/v1/slaDashboard'))
 
   app.route('/:url(api|auth)/*').get((req, res) => {
     res.status(404).send({url: `${req.originalUrl} not found`})

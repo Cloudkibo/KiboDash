@@ -13,7 +13,7 @@ exports.mapQuery = (query) => {
             [Op.contains]: [q.value]
           }
         } else {
-          reject(`Invalid special key found ${specialKeys[i]}`)
+          reject(new Error(`Invalid special key found ${specialKeys[i]}`))
           break
         }
       }

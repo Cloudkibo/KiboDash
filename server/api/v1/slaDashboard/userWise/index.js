@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const validate = require('express-jsonschema').validate
-const auth = require('../../../auth/auth.service')
+const auth = require('../../../../auth/auth.service')
 const controller = require('./controller')
 const validationSchema = require('./validationSchema')
 

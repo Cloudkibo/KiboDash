@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     pageId: DataTypes.STRING,
     messages: DataTypes.JSONB,
     sessions: DataTypes.JSONB,
+    responses: DataTypes.INTEGER,
     avgRespTime: DataTypes.STRING,
     maxRespTime: DataTypes.STRING,
     avgResolveTime: DataTypes.STRING

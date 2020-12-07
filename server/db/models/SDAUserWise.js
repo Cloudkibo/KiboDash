@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.STRING,
     messages: DataTypes.JSONB,
     sessions: DataTypes.JSONB,
+    responses: DataTypes.INTEGER,
     avgRespTime: DataTypes.STRING,
     maxRespTime: DataTypes.STRING,
     avgResolveTime: DataTypes.STRING

@@ -25,6 +25,7 @@ exports.createPayload = {
         'resolved': {'type': 'number'}
       }
     },
+    'responses': {'type': 'number'},
     'avgRespTime': {
       'type': 'string'
     },
@@ -77,6 +78,7 @@ exports.updatePayload = {
             'resolved': {'type': 'number'}
           }
         },
+        'responses': {'type': 'number'},
         'avgRespTime': {
           'type': 'string'
         },
@@ -115,6 +117,7 @@ exports.updatePayload = {
             'resolved': {'type': 'number'}
           }
         },
+        'responses': {'type': 'number'},
         'avgRespTime': {
           'type': 'string'
         },
@@ -160,6 +163,7 @@ exports.findPayload = {
         'resolved': {'type': 'number'}
       }
     },
+    'responses': {'type': 'number'},
     'avgRespTime': {
       'type': 'string'
     },

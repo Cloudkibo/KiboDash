@@ -1,10 +1,11 @@
 const logger = require('../../../../components/logger')
 const models = require('../../../../db/models')
-
+const { validateAndConvert } = require('../logiclayer')
 const TAG = '/server/api/v1/slaDashboard/teamWise/controller.js'
 
 exports.find = function (req, res) {
-  models.SDATeamWise.findAll({where: req.body})
+  const query = validateAndConvert(req.body)
+  models.SDATeamWise.findAll({where: query})
     .then((data) => {
       return res.status(200).json({ status: 'success', payload: data })
     })

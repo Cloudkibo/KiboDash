@@ -1,10 +1,11 @@
 const logger = require('../../../../components/logger')
 const models = require('../../../../db/models')
-
+const { validateAndConvert } = require('../logiclayer')
 const TAG = '/server/api/v1/slaDashboard/userWise/controller.js'
 
 exports.find = function (req, res) {
-  models.SDAUserWise.findAll({where: req.body})
+  const query = validateAndConvert(req.body)
+  models.SDAUserWise.findAll({where: query})
     .then((data) => {
       return res.status(200).json({ status: 'success', payload: data })
     })

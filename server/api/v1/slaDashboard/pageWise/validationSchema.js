@@ -17,7 +17,7 @@ exports.createPayload = {
     'sessions': {
       'type': 'object',
       'properties': {
-        'total': {'type': 'number'},
+        'new': {'type': 'number'},
         'pending': {'type': 'number'},
         'open': {'type': 'number'},
         'resolved': {'type': 'number'}
@@ -25,23 +25,18 @@ exports.createPayload = {
     },
     'responses': {'type': 'number'},
     'avgRespTime': {
-      'type': 'string'
+      'type': 'number'
     },
     'maxRespTime': {
-      'type': 'string'
+      'type': 'number'
     },
     'avgResolveTime': {
-      'type': 'boolean'
+      'type': 'number'
     }
   },
   'required': [
     'companyId',
-    'pageId',
-    'messages',
-    'sessions',
-    'avgRespTime',
-    'maxRespTime',
-    'avgResolveTime'
+    'pageId'
   ]
 }
 
@@ -67,7 +62,7 @@ exports.updatePayload = {
         'sessions': {
           'type': 'object',
           'properties': {
-            'total': {'type': 'number'},
+            'new': {'type': 'number'},
             'pending': {'type': 'number'},
             'open': {'type': 'number'},
             'resolved': {'type': 'number'}
@@ -75,13 +70,13 @@ exports.updatePayload = {
         },
         'responses': {'type': 'number'},
         'avgRespTime': {
-          'type': 'string'
+          'type': 'number'
         },
         'maxRespTime': {
-          'type': 'string'
+          'type': 'number'
         },
         'avgResolveTime': {
-          'type': 'boolean'
+          'type': 'number'
         }
       }
     },
@@ -104,7 +99,7 @@ exports.updatePayload = {
         'sessions': {
           'type': 'object',
           'properties': {
-            'total': {'type': 'number'},
+            'new': {'type': 'number'},
             'pending': {'type': 'number'},
             'open': {'type': 'number'},
             'resolved': {'type': 'number'}
@@ -112,13 +107,13 @@ exports.updatePayload = {
         },
         'responses': {'type': 'number'},
         'avgRespTime': {
-          'type': 'string'
+          'type': 'number'
         },
         'maxRespTime': {
-          'type': 'string'
+          'type': 'number'
         },
         'avgResolveTime': {
-          'type': 'boolean'
+          'type': 'number'
         }
       }
     }
@@ -148,7 +143,7 @@ exports.findPayload = {
     'sessions': {
       'type': 'object',
       'properties': {
-        'total': {'type': 'number'},
+        'new': {'type': 'number'},
         'pending': {'type': 'number'},
         'open': {'type': 'number'},
         'resolved': {'type': 'number'}
@@ -156,13 +151,13 @@ exports.findPayload = {
     },
     'responses': {'type': 'number'},
     'avgRespTime': {
-      'type': 'string'
+      'type': 'number'
     },
     'maxRespTime': {
-      'type': 'string'
+      'type': 'number'
     },
     'avgResolveTime': {
-      'type': 'boolean'
+      'type': 'number'
     }
   }
 }

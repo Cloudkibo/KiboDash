@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     messages: DataTypes.JSONB,
     sessions: DataTypes.JSONB,
     responses: DataTypes.INTEGER,
-    avgRespTime: DataTypes.STRING,
-    maxRespTime: DataTypes.STRING,
-    avgResolveTime: DataTypes.STRING
+    avgRespTime: DataTypes.INTEGER,
+    maxRespTime: DataTypes.INTEGER,
+    avgResolveTime: DataTypes.INTEGER
   }, {})
 
   SDAPageWise.associate = function (models) {

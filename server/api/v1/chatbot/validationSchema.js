@@ -19,6 +19,9 @@ exports.createPayload = {
     'startingBlockId': {
       'type': 'string'
     },
+    'dialogFlowAgentId': {
+      'type': 'string'
+    },
     'published': {
       'type': 'boolean'
     }
@@ -57,6 +60,9 @@ exports.updatePayload = {
         'startingBlockId': {
           'type': 'string'
         },
+        'dialogFlowAgentId': {
+          'type': 'string'
+        },
         'published': {
           'type': 'boolean'
         }
@@ -81,6 +87,9 @@ exports.updatePayload = {
           'type': 'string'
         },
         'startingBlockId': {
+          'type': 'string'
+        },
+        'dialogFlowAgentId': {
           'type': 'string'
         },
         'published': {
@@ -114,6 +123,9 @@ exports.chatbotObject = {
       'type': 'string'
     },
     'startingBlockId': {
+      'type': 'string'
+    },
+    'dialogFlowAgentId': {
       'type': 'string'
     },
     'published': {

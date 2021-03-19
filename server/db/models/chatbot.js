@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     companyId: DataTypes.STRING,
     userId: DataTypes.STRING,
     startingBlockId: DataTypes.STRING,
+    dialogFlowAgentId: DataTypes.STRING,
     published: DataTypes.BOOLEAN
   }, {})
 

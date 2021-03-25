@@ -2,6 +2,7 @@ const logger = require('./../../../components/logger')
 const models = require('./../../../db/models')
 const _ = require('lodash')
 const queryMapper = require('../../../db/queryMapper')
+const { validateAndConvert } = require('./logiclayer')
 
 const TAG = '/server/api/v1/chatbotBlock/chatbotBlock.controller.js'
 
@@ -37,7 +38,7 @@ exports.create = function (req, res) {
 
 exports.update = function (req, res) {
   logger.serverLog(TAG, 'Hit the update chatbotBlock endpoint')
-  const query = {where: req.body.query}
+  const query = {where: validateAndConvert(req.body.query)}
   const updated = req.body.updated
   models.ChatbotBlock.update(updated, query)
     .then(savedData => {

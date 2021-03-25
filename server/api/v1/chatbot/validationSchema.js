@@ -89,9 +89,6 @@ exports.updatePayload = {
         'startingBlockId': {
           'type': 'string'
         },
-        'dialogFlowAgentId': {
-          'type': 'string'
-        },
         'published': {
           'type': 'boolean'
         }
